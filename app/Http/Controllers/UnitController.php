@@ -15,19 +15,24 @@ class UnitController extends Controller
 
     public function create()
     {
-        return view('units.create');
+        $kodeOtomatis = Unit::buatKodeOtomatis();
+        return view('units.create', compact('kodeOtomatis'));
     }
 
-    public function store(Request $request)
+    public function store(Request $permintaan)
     {
-        $request->validate([
+        if (!$permintaan->filled('code')) {
+            $permintaan->merge(['code' => Unit::buatKodeOtomatis()]);
+        }
+
+        $permintaan->validate([
             'code' => 'required|string|max:50|unique:units,code',
             'name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'description' => 'nullable|string',
         ]);
 
-        Unit::create($request->all());
+        Unit::create($permintaan->all());
 
         return redirect()->route('units.index')->with('success', 'Satuan barang berhasil ditambahkan.');
     }
@@ -37,16 +42,16 @@ class UnitController extends Controller
         return view('units.edit', compact('unit'));
     }
 
-    public function update(Request $request, Unit $unit)
+    public function update(Request $permintaan, Unit $unit)
     {
-        $request->validate([
+        $permintaan->validate([
             'code' => 'required|string|max:50|unique:units,code,' . $unit->id,
             'name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'description' => 'nullable|string',
         ]);
 
-        $unit->update($request->all());
+        $unit->update($permintaan->all());
 
         return redirect()->route('units.index')->with('success', 'Satuan barang berhasil diperbarui.');
     }

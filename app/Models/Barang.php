@@ -34,14 +34,29 @@ class Barang extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function kategori()
+    {
+        return $this->category();
+    }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);
     }
 
+    public function satuanModel()
+    {
+        return $this->unit();
+    }
+
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function lokasiRak()
+    {
+        return $this->location();
     }
 
     public function batches()
@@ -70,9 +85,41 @@ class Barang extends Model
     }
 
     /**
-     * Get batches of this item that are expired or expiring soon (within 7 days).
+     * Generate kode barang berurutan secara otomatis tanpa count() (contoh: BRG-001, BRG-002).
      */
-    public function getExpiringBatches()
+    public static function buatKodeOtomatis(string $prefix = 'BRG-', int $padding = 3): string
+    {
+        $field = 'kode_barang';
+        $lastRecord = self::where($field, 'like', $prefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(' . $field . ', ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
+            ->first();
+
+        if ($lastRecord) {
+            $lastNumber = (int) substr($lastRecord->{$field}, strlen($prefix));
+            $nextNumber = $lastNumber + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        $kode = $prefix . str_pad($nextNumber, $padding, '0', STR_PAD_LEFT);
+
+        while (self::where($field, $kode)->exists()) {
+            $nextNumber++;
+            $kode = $prefix . str_pad($nextNumber, $padding, '0', STR_PAD_LEFT);
+        }
+
+        return $kode;
+    }
+
+    public static function generateNextCode(): string
+    {
+        return self::buatKodeOtomatis();
+    }
+
+    /**
+     * Dapatkan daftar batch barang yang expired atau mendekati kadaluarsa (dalam 7 hari).
+     */
+    public function dapatkanBatchKadaluarsa()
     {
         if ($this->batas_umur_hari <= 0) {
             return collect();
@@ -81,17 +128,15 @@ class Barang extends Model
         return $this->barangMasuks()
             ->get()
             ->map(function ($masuk) {
-                // Carbon date calculations
                 $tanggalMasuk = \Carbon\Carbon::parse($masuk->tanggal);
-                $expiryDate = $tanggalMasuk->copy()->addDays($this->batas_umur_hari);
-                $now = \Carbon\Carbon::now();
+                $tanggalKadaluarsa = $tanggalMasuk->copy()->addDays($this->batas_umur_hari);
+                $sekarang = \Carbon\Carbon::now();
                 
-                // Diff in days (can be negative if already expired)
-                $daysLeft = (int)$now->startOfDay()->diffInDays($expiryDate->startOfDay(), false);
+                $sisaHari = (int)$sekarang->startOfDay()->diffInDays($tanggalKadaluarsa->startOfDay(), false);
                 
-                $masuk->expiry_date = $expiryDate;
-                $masuk->days_left = $daysLeft;
-                $masuk->status = $daysLeft < 0 ? 'expired' : ($daysLeft <= 7 ? 'warning' : 'safe');
+                $masuk->expiry_date = $tanggalKadaluarsa;
+                $masuk->days_left = $sisaHari;
+                $masuk->status = $sisaHari < 0 ? 'expired' : ($sisaHari <= 7 ? 'warning' : 'safe');
                 
                 return $masuk;
             })
@@ -99,5 +144,10 @@ class Barang extends Model
                 return $masuk->status === 'expired' || $masuk->status === 'warning';
             })
             ->values();
+    }
+
+    public function getExpiringBatches()
+    {
+        return $this->dapatkanBatchKadaluarsa();
     }
 }

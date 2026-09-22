@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-slate-800 leading-tight">
-                {{ __('Buat Purchase Order (PO)') }}
-            </h2>
-            <a href="{{ route('purchase-orders.index') }}" class="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-colors">
-                &larr; Kembali
-            </a>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Buat Purchase Order (PO)') }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Formulir pemesanan barang resmi ke vendor/supplier.</p>
+            </div>
         </div>
     </x-slot>
 

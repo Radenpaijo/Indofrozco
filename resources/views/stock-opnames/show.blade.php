@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-bold text-xl text-slate-800 leading-tight">
-                {{ __('Detail Stock Opname: ') }} {{ $stockOpname->nomor_opname }}
-            </h2>
-            <a href="{{ route('stock-opnames.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition">
-                &larr; Kembali
-            </a>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Detail Stock Opname: ') }} {{ $stockOpname->nomor_opname }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Hasil perbandingan stok sistem vs fisik.</p>
+            </div>
         </div>
     </x-slot>
 

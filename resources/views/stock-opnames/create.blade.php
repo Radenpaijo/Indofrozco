@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-xl text-slate-800 leading-tight">
-            {{ __('Form Sesi Stock Opname Baru') }}
-        </h2>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Form Sesi Stock Opname Baru') }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Input data stok hasil audit fisik di lapangan.</p>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-6">

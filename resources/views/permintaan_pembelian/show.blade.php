@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Detail Requisition (PR): ') }} {{ $pr->no_pr }}
-            </h2>
-            <a href="{{ route('permintaan-pembelian.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg transition-colors">
-                Kembali
-            </a>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Detail Requisition (PR): ') }} {{ $pr->no_pr }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Status persetujuan & rincian barang pengajuan PR.</p>
+            </div>
         </div>
     </x-slot>
 
@@ -46,12 +47,29 @@
 
                     <!-- Gudang / Admin Cancel Option -->
                     @if($pr->status === 'pending' && auth()->user()->hasRole(['admin', 'gudang']))
-                        <form method="POST" action="{{ route('permintaan-pembelian.cancel', $pr->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan PR ini?')">
-                            @csrf
-                            <button type="submit" class="mt-2 inline-flex items-center px-4 py-2 border border-rose-600 hover:bg-rose-50 text-rose-600 text-sm font-semibold rounded-lg transition-colors">
+                        <div x-data="{ open: false }">
+                            <button type="button" @click="open = true" class="mt-2 inline-flex items-center px-4 py-2 border border-rose-600 hover:bg-rose-50 text-rose-600 text-sm font-semibold rounded-lg transition-colors">
                                 Batalkan PR
                             </button>
-                        </form>
+                            <div x-show="open" x-cloak x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @keydown.escape.window="open = false">
+                                <div x-show="open" x-transition.scale @click.outside="open = false" class="w-full max-w-md rounded-xl bg-white shadow-2xl">
+                                    <div class="flex items-center justify-between border-b px-6 py-4">
+                                        <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Pembatalan PR</h3>
+                                        <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                                    </div>
+                                    <div class="px-6 py-5">
+                                        <p class="text-sm text-gray-600">Apakah Anda yakin ingin membatalkan PR <span class="font-semibold text-gray-900">{{ $pr->no_pr }}</span>?</p>
+                                    </div>
+                                    <div class="flex justify-end gap-3 border-t bg-gray-50 px-6 py-4 rounded-b-xl">
+                                        <button type="button" @click="open = false" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Batal</button>
+                                        <form method="POST" action="{{ route('permintaan-pembelian.cancel', $pr->id) }}">
+                                            @csrf
+                                            <button type="submit" class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">Ya, Batalkan</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endif
 
                     <!-- Purchasing Process to PO Option -->

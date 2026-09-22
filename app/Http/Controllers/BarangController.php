@@ -3,75 +3,120 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barang;
+use App\Models\Category;
+use App\Models\Unit;
+use App\Models\Location;
 use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $permintaan)
     {
-        $query = Barang::query();
+        $kueri = Barang::with(['category', 'unit', 'location.warehouse', 'warehouse']);
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('nama_barang', 'like', "%{$search}%")
-                  ->orWhere('kode_barang', 'like', "%{$search}%")
-                  ->orWhere('kode_rak', 'like', "%{$search}%");
+        if ($permintaan->filled('search')) {
+            $pencarian = $permintaan->search;
+            $kueri->where(function($q) use ($pencarian) {
+                $q->where('nama_barang', 'like', "%{$pencarian}%")
+                  ->orWhere('kode_barang', 'like', "%{$pencarian}%")
+                  ->orWhere('kode_rak', 'like', "%{$pencarian}%");
             });
         }
 
-        if ($request->filled('lokasi')) {
-            $query->where('lokasi_gudang', $request->lokasi);
+        if ($permintaan->filled('category_id')) {
+            $kueri->where('category_id', $permintaan->category_id);
         }
 
-        if ($request->filled('status')) {
-            if ($request->status === 'low_stock') {
-                $query->where('stok', '<=', \DB::raw('stok_minimum'));
-            } elseif ($request->status === 'active') {
-                $query->where('is_active', true);
-            } elseif ($request->status === 'inactive') {
-                $query->where('is_active', false);
+        if ($permintaan->filled('unit_id')) {
+            $kueri->where('unit_id', $permintaan->unit_id);
+        }
+
+        if ($permintaan->filled('warehouse_id')) {
+            $warehouseId = $permintaan->warehouse_id;
+            $kueri->where(function($q) use ($warehouseId) {
+                $q->where('warehouse_id', $warehouseId)
+                  ->orWhereHas('location', function($lq) use ($warehouseId) {
+                      $lq->where('warehouse_id', $warehouseId);
+                  });
+            });
+        }
+
+        if ($permintaan->filled('location_id')) {
+            $kueri->where('location_id', $permintaan->location_id);
+        }
+
+        if ($permintaan->filled('status')) {
+            if ($permintaan->status === 'low_stock') {
+                $kueri->where('stok', '<=', \DB::raw('stok_minimum'));
+            } elseif ($permintaan->status === 'active') {
+                $kueri->where('is_active', true);
+            } elseif ($permintaan->status === 'inactive') {
+                $kueri->where('is_active', false);
             }
         }
 
-        $barangs = $query->orderBy('kode_barang', 'asc')->paginate(10)->withQueryString();
+        $barangs = $kueri->orderBy('kode_barang', 'asc')->paginate(10)->withQueryString();
+        $categories = Category::where('status', 'active')->get();
+        $units = Unit::where('status', 'active')->get();
+        $warehouses = \App\Models\Warehouse::where('status', 'active')->get();
+        $locations = \App\Models\Location::with('warehouse')->where('status', 'active')->get();
 
-        return view('barangs.index', compact('barangs'));
+        return view('barangs.index', compact('barangs', 'categories', 'units', 'warehouses', 'locations'));
     }
 
     public function create()
     {
-        return view('barangs.create');
+        $categories = Category::where('status', 'active')->get();
+        $units = Unit::where('status', 'active')->get();
+        $locations = Location::with('warehouse')->where('status', 'active')->get();
+        $nextKodeBarang = Barang::buatKodeOtomatis();
+
+        return view('barangs.create', compact('categories', 'units', 'locations', 'nextKodeBarang'));
     }
 
-    public function store(Request $request)
+    public function store(Request $permintaan)
     {
-        $request->validate([
+        if (!$permintaan->filled('kode_barang')) {
+            $permintaan->merge(['kode_barang' => Barang::buatKodeOtomatis()]);
+        }
+
+        $permintaan->validate([
             'kode_barang' => 'required|unique:barangs,kode_barang',
             'nama_barang' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'unit_id' => 'required|exists:units,id',
             'satuan' => 'required|string|max:50',
-            'stok' => 'nullable|integer|min:0',
-            'stok_minimum' => 'required|integer|min:0',
-            'batas_umur_hari' => 'required|integer|min:0',
-            'lokasi_gudang' => 'required|in:Gudang Kering,Cold Storage',
-            'kode_rak' => 'nullable|string|max:50',
+            'stok_minimum' => 'nullable|integer|min:0',
+            'description' => 'nullable|string',
+        ], [
+            'kode_barang.required' => 'Kode barang wajib diisi.',
+            'kode_barang.unique' => 'Kode barang sudah digunakan, gunakan kode lain.',
+            'nama_barang.required' => 'Nama barang wajib diisi.',
+            'category_id.required' => 'Kelompok barang wajib dipilih.',
+            'unit_id.required' => 'Satuan barang wajib dipilih.',
         ]);
 
-        $data = $request->all();
-        $data['stok'] = $request->stok ?? 0;
-        $data['is_active'] = $request->has('is_active') ? true : true;
+        $dataBarang = [
+            'kode_barang' => $permintaan->kode_barang,
+            'nama_barang' => $permintaan->nama_barang,
+            'category_id' => $permintaan->category_id,
+            'unit_id' => $permintaan->unit_id,
+            'satuan' => $permintaan->satuan,
+            'stok_minimum' => $permintaan->stok_minimum ?? 0,
+            'description' => $permintaan->description,
+            'stok' => 0,
+            'batas_umur_hari' => 0,
+            'is_active' => true,
+        ];
 
-        // $jumlah_barang = Barang::count();
-        // $nama_barang = "BRG - " . $jumlah_barang + 1;
-
-        $barang = Barang::create($data);
+        $barang = Barang::create($dataBarang);
 
         \App\Models\AuditLog::create([
             'user_id' => auth()->id(),
             'action' => 'CREATE_ITEM',
             'module' => 'MASTER_BARANG',
-            'record_id' => $barang->id,
-            'new_values' => $data,
+            'record_id' => (string)$barang->id,
+            'new_values' => $dataBarang,
             'ip_address' => request()->ip(),
         ]);
 
@@ -80,34 +125,51 @@ class BarangController extends Controller
 
     public function edit(Barang $barang)
     {
-        return view('barangs.edit', compact('barang'));
+        $categories = Category::where('status', 'active')->get();
+        $units = Unit::where('status', 'active')->get();
+        $locations = Location::with('warehouse')->where('status', 'active')->get();
+
+        return view('barangs.edit', compact('barang', 'categories', 'units', 'locations'));
     }
 
-    public function update(Request $request, Barang $barang)
+    public function update(Request $permintaan, Barang $barang)
     {
-        $request->validate([
+        $permintaan->validate([
             'kode_barang' => 'required|unique:barangs,kode_barang,' . $barang->id,
             'nama_barang' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'unit_id' => 'required|exists:units,id',
             'satuan' => 'required|string|max:50',
-            'stok' => 'required|integer|min:0',
-            'stok_minimum' => 'required|integer|min:0',
-            'batas_umur_hari' => 'required|integer|min:0',
-            'lokasi_gudang' => 'required|in:Gudang Kering,Cold Storage',
-            'kode_rak' => 'nullable|string|max:50',
+            'stok_minimum' => 'nullable|integer|min:0',
+            'description' => 'nullable|string',
+        ], [
+            'kode_barang.required' => 'Kode barang wajib diisi.',
+            'kode_barang.unique' => 'Kode barang sudah digunakan, gunakan kode lain.',
+            'nama_barang.required' => 'Nama barang wajib diisi.',
+            'category_id.required' => 'Kelompok barang wajib dipilih.',
+            'unit_id.required' => 'Satuan barang wajib dipilih.',
         ]);
 
-        $oldValues = $barang->toArray();
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+        $dataLama = $barang->toArray();
+        $dataBarang = [
+            'kode_barang' => $permintaan->kode_barang,
+            'nama_barang' => $permintaan->nama_barang,
+            'category_id' => $permintaan->category_id,
+            'unit_id' => $permintaan->unit_id,
+            'satuan' => $permintaan->satuan,
+            'stok_minimum' => $permintaan->stok_minimum ?? 0,
+            'description' => $permintaan->description,
+            'is_active' => $permintaan->has('is_active'),
+        ];
 
-        $barang->update($data);
+        $barang->update($dataBarang);
 
         \App\Models\AuditLog::create([
             'user_id' => auth()->id(),
             'action' => 'UPDATE_ITEM',
             'module' => 'MASTER_BARANG',
-            'record_id' => $barang->id,
-            'old_values' => $oldValues,
+            'record_id' => (string)$barang->id,
+            'old_values' => $dataLama,
             'new_values' => $barang->fresh()->toArray(),
             'ip_address' => request()->ip(),
         ]);
@@ -117,16 +179,14 @@ class BarangController extends Controller
 
     public function destroy(Barang $barang)
     {
-        // Check if there are related transactions
         if ($barang->barangMasuks()->exists() || $barang->barangKeluars()->exists()) {
-            // Soft deactivate instead of hard delete to preserve historical integrity
             $barang->update(['is_active' => false]);
 
             \App\Models\AuditLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'DEACTIVATE_ITEM',
                 'module' => 'MASTER_BARANG',
-                'record_id' => $barang->id,
+                'record_id' => (string)$barang->id,
                 'new_values' => ['is_active' => false],
                 'ip_address' => request()->ip(),
             ]);
@@ -141,7 +201,7 @@ class BarangController extends Controller
             'user_id' => auth()->id(),
             'action' => 'DELETE_ITEM',
             'module' => 'MASTER_BARANG',
-            'record_id' => $barangId,
+            'record_id' => (string)$barangId,
             'ip_address' => request()->ip(),
         ]);
 
@@ -152,7 +212,7 @@ class BarangController extends Controller
     {
         $barangMasuk = $barang->barangMasuks()->with('user')->orderBy('tanggal', 'desc')->get();
         $barangKeluar = $barang->barangKeluars()->with('user')->orderBy('tanggal', 'desc')->get();
-        $expiringBatches = $barang->getExpiringBatches();
+        $expiringBatches = $barang->dapatkanBatchKadaluarsa();
 
         return view('barangs.show', compact('barang', 'barangMasuk', 'barangKeluar', 'expiringBatches'));
     }

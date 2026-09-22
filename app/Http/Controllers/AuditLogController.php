@@ -34,6 +34,13 @@ class AuditLogController extends Controller
     public function show(AuditLog $auditLog)
     {
         $auditLog->load('user');
-        return view('audit-logs.show', compact('auditLog'));
+
+        $categories = \App\Models\Category::pluck('name', 'id')->toArray();
+        $units = \App\Models\Unit::pluck('name', 'id')->toArray();
+        $locations = \App\Models\Location::pluck('name', 'id')->toArray();
+        $warehouseTypes = \App\Models\WarehouseType::pluck('name', 'id')->toArray();
+
+        return view('audit-logs.show', compact('auditLog', 'categories', 'units', 'locations', 'warehouseTypes'));
     }
 }
+

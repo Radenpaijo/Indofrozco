@@ -13,4 +13,36 @@ class Unit extends Model
     {
         return $this->hasMany(Barang::class);
     }
+
+    public function daftarBarang(): HasMany
+    {
+        return $this->barangs();
+    }
+
+    /**
+     * Buat kode satuan otomatis tanpa count() (contoh: STN-001).
+     */
+    public static function buatKodeOtomatis(string $prefix = 'STN-', int $padding = 3): string
+    {
+        $field = 'code';
+        $lastRecord = self::where($field, 'like', $prefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(' . $field . ', ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
+            ->first();
+
+        if ($lastRecord) {
+            $lastNumber = (int) substr($lastRecord->{$field}, strlen($prefix));
+            $nextNumber = $lastNumber + 1;
+        } else {
+            $nextNumber = 1;
+        }
+
+        $kode = $prefix . str_pad($nextNumber, $padding, '0', STR_PAD_LEFT);
+
+        while (self::where($field, $kode)->exists()) {
+            $nextNumber++;
+            $kode = $prefix . str_pad($nextNumber, $padding, '0', STR_PAD_LEFT);
+        }
+
+        return $kode;
+    }
 }

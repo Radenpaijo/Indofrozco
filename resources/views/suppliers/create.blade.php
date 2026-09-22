@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tambah Supplier Baru') }}
-        </h2>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Tambah Supplier') }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Daftarkan mitra pemasok / vendor baru.</p>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">

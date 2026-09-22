@@ -20,6 +20,7 @@ class User extends Authenticatable
         'Master Data' => [
             'categories' => 'Kategori Barang',
             'units' => 'Satuan Barang',
+            'warehouse_types' => 'Tipe Gudang',
             'warehouses' => 'Data Gudang',
             'locations' => 'Lokasi / Rak Gudang',
             'barangs' => 'Katalog Barang',
@@ -124,7 +125,7 @@ class User extends Authenticatable
         // Fallback default permissions based on Role if permissions column is null
         return match ($this->role) {
             'gudang' => in_array($permission, [
-                'barangs', 'warehouses', 'locations', 'barang_masuk', 'barang_keluar',
+                'barangs', 'warehouse_types', 'warehouses', 'locations', 'barang_masuk', 'barang_keluar',
                 'stock_opnames', 'stock_adjustments', 'stock_mutations', 'permintaan_pembelian'
             ]),
             'purchasing' => in_array($permission, [

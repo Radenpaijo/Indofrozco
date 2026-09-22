@@ -15,19 +15,24 @@ class CategoryController extends Controller
 
     public function create()
     {
-        return view('categories.create');
+        $kodeOtomatis = Category::buatKodeOtomatis();
+        return view('categories.create', compact('kodeOtomatis'));
     }
 
-    public function store(Request $request)
+    public function store(Request $permintaan)
     {
-        $request->validate([
+        if (!$permintaan->filled('code')) {
+            $permintaan->merge(['code' => Category::buatKodeOtomatis()]);
+        }
+
+        $permintaan->validate([
             'code' => 'required|string|max:50|unique:categories,code',
             'name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'description' => 'nullable|string',
         ]);
 
-        Category::create($request->all());
+        Category::create($permintaan->all());
 
         return redirect()->route('categories.index')->with('success', 'Kategori barang berhasil ditambahkan.');
     }
@@ -37,16 +42,16 @@ class CategoryController extends Controller
         return view('categories.edit', compact('category'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $permintaan, Category $category)
     {
-        $request->validate([
+        $permintaan->validate([
             'code' => 'required|string|max:50|unique:categories,code,' . $category->id,
             'name' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'description' => 'nullable|string',
         ]);
 
-        $category->update($request->all());
+        $category->update($permintaan->all());
 
         return redirect()->route('categories.index')->with('success', 'Kategori barang berhasil diperbarui.');
     }

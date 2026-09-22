@@ -1,20 +1,25 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Laporan ERP PT INDOFROZ') }}
-            </h2>
-            <div class="flex space-x-2">
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+                <x-back-button />
+                <div class="min-w-0">
+                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                        {{ __('Laporan ERP PT INDOFROZ') }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Laporan stok, mutasi, kartu stok, dan histori log transaksi.</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 shrink-0">
                 <!-- Export CSV Button -->
-                <a href="{{ route('reports.export', ['type' => $reportType, 'start_date' => $startDate, 'end_date' => $endDate]) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-semibold bg-white text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
+                <a href="{{ route('reports.export', ['type' => $reportType, 'start_date' => $startDate, 'end_date' => $endDate]) }}" class="inline-flex items-center px-4 py-2.5 border border-slate-200 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
                     <svg class="h-4 w-4 mr-2 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Ekspor ke Excel (CSV)
+                    Export CSV
                 </a>
-                
                 <!-- Print Button -->
-                <a href="{{ route('reports.print', ['type' => $reportType, 'start_date' => $startDate, 'end_date' => $endDate]) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow transition-colors">
+                <a href="{{ route('reports.print', ['type' => $reportType, 'start_date' => $startDate, 'end_date' => $endDate]) }}" target="_blank" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all">
                     <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                     </svg>

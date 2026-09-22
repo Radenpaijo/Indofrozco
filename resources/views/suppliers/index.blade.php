@@ -1,11 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Katalog Master Supplier') }}
-            </h2>
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+                <x-back-button />
+                <div class="min-w-0">
+                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                        {{ __('Katalog Master Supplier') }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Daftar mitra pemasok & vendor bahan baku.</p>
+                </div>
+            </div>
             @if(auth()->user()->hasRole(['admin', 'purchasing']))
-                <a href="{{ route('suppliers.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow transition-colors">
+                <a href="{{ route('suppliers.create') }}" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all shrink-0">
                     <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
@@ -61,18 +67,20 @@
                                         {{ $supplier->alamat ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 rounded-full text-xs font-bold {{ $supplier->is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500' }}">
-                                            {{ $supplier->is_active ? 'Aktif' : 'Non-Aktif' }}
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold {{ $supplier->is_active ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-slate-100 text-slate-500 border border-slate-200' }}">
+                                            {{ $supplier->is_active ? 'Aktif' : 'Nonaktif' }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 text-right space-x-3 whitespace-nowrap">
+                                    <td class="px-6 py-4 text-right whitespace-nowrap">
                                         @if(auth()->user()->hasRole(['admin', 'purchasing']))
-                                            <a href="{{ route('suppliers.edit', $supplier->id) }}" class="text-amber-600 hover:text-amber-900 font-semibold text-xs transition-colors">Edit</a>
-                                            <form method="POST" action="{{ route('suppliers.destroy', $supplier->id) }}" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus supplier ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-rose-600 hover:text-rose-900 font-semibold text-xs transition-colors">Hapus</button>
-                                            </form>
+                                            <div class="flex items-center justify-end space-x-2">
+                                                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit">
+                                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </a>
+                                                <x-modal-hapus name="{{ $supplier->nama_supplier }}" action="{{ route('suppliers.destroy', $supplier->id) }}" />
+                                            </div>
                                         @else
                                             <span class="text-gray-400 text-xs">-</span>
                                         @endif

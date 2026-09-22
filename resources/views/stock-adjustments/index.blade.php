@@ -1,11 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-bold text-xl text-slate-800 leading-tight">
-                {{ __('Stock Adjustment (Penyesuaian Stok Resmi)') }}
-            </h2>
-            <a href="{{ route('stock-adjustments.create') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition shadow-md shadow-indigo-600/20">
-                + Buat Adjustment Stok
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+                <x-back-button />
+                <div class="min-w-0">
+                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                        {{ __('Stock Adjustment (Penyesuaian Stok Resmi)') }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Penyesuaian kuantitas stok akibat barang rusak/hilang.</p>
+                </div>
+            </div>
+            <a href="{{ route('stock-adjustments.create') }}" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all shrink-0">
+                <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Buat Adjustment Stok
             </a>
         </div>
     </x-slot>

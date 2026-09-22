@@ -114,10 +114,12 @@
                     <div class="max-w-7xl mx-auto space-y-6">
                         <!-- Render page title and specific actions inside the page body at the top of scrollable container -->
                         @isset($header)
-                            <div class="pb-6 border-b border-slate-200">
+                            <div class="pb-6 border-b border-slate-200 text-left">
                                 {{ $header }}
                             </div>
                         @endisset
+
+                        <x-alert />
 
                         {{ $slot }}
                     </div>

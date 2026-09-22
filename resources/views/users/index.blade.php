@@ -1,17 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h2 class="font-bold text-xl text-slate-800 leading-tight">
-                    {{ __('Manajemen Akun User & Hak Akses Fitur') }}
-                </h2>
-                <p class="text-xs text-slate-500 mt-1">Kelola pengguna sistem, buat akun baru, dan tentukan secara spesifik fitur mana saja yang dapat diakses oleh akun tersebut.</p>
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+                <x-back-button />
+                <div class="min-w-0">
+                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                        {{ __('Manajemen Akun User & Hak Akses Fitur') }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Kelola pengguna sistem, buat akun baru, dan tentukan secara spesifik fitur mana saja yang dapat diakses oleh akun tersebut.
+                    </p>
+                </div>
             </div>
-            <a href="{{ route('users.create') }}" class="inline-flex items-center justify-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition shadow-md shadow-indigo-600/20">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            <a href="{{ route('users.create') }}" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all shrink-0">
+                <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                + Tambah Akun Baru
+                Tambah Akun Baru
             </a>
         </div>
     </x-slot>
@@ -141,13 +146,7 @@
                                                 Edit Hak Akses
                                             </a>
                                             @if(auth()->id() !== $user->id)
-                                                <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus akun {{ $user->name }}?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold text-xs rounded-lg transition">
-                                                        Hapus
-                                                    </button>
-                                                </form>
+                                                <x-modal-hapus name="{{ $user->name }}" action="{{ route('users.destroy', $user) }}" />
                                             @else
                                                 <button type="button" disabled title="Tidak dapat menghapus akun sendiri" class="inline-flex items-center px-3 py-1.5 bg-slate-100 text-slate-400 font-semibold text-xs rounded-lg cursor-not-allowed">
                                                     Hapus

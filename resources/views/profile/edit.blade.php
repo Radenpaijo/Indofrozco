@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-left">
+            <div class="flex items-center space-x-4">
+                <x-back-button />
+                <div>
+                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                        {{ __('Profil Pengguna & Keamanan') }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Pengaturan informasi akun dan kata sandi.</p>
+                </div>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">

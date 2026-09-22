@@ -1,49 +1,60 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-xl text-slate-800 leading-tight">
-            {{ __('Tambah Kategori Barang') }}
-        </h2>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Tambah Kategori Barang') }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Tambah kelompok / kategori produk baru.</p>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-slate-200/80 p-6">
-                <form action="{{ route('categories.store') }}" method="POST" class="space-y-5">
-                    @csrf
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+            <form action="{{ route('categories.store') }}" method="POST" class="space-y-6">
+                @csrf
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Kode Kategori</label>
-                        <input type="text" name="code" value="{{ old('code') }}" required class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Contoh: CAT-001">
-                        @error('code') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama Kategori</label>
-                        <input type="text" name="name" value="{{ old('name') }}" required class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Contoh: Bahan Baku Frozen">
-                        @error('name') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        <x-input-label for="code" :value="__('Kode Kategori')" />
+                        <x-text-input id="code" class="block mt-1 w-full font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $kodeOtomatis)" required readonly placeholder="CAT-001" />
+                        <x-input-error :messages="$errors->get('code')" class="mt-2" />
+                        <p class="text-[11px] text-slate-400 mt-1">Kode dibuat otomatis oleh sistem.</p>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Status</label>
-                        <select name="status" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Aktif</option>
-                            <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Non-Aktif</option>
-                        </select>
+                        <x-input-label for="name" :value="__('Nama Kategori')" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required placeholder="Contoh: Bahan Baku Frozen" />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
+                </div>
 
-                    <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Keterangan</label>
-                        <textarea name="description" rows="3" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Deskripsi opsional...">{{ old('description') }}</textarea>
-                    </div>
+                <div>
+                    <x-input-label for="status" :value="__('Status')" />
+                    <select id="status" name="status" class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                        <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif</option>
+                        <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                    <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                </div>
 
-                    <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
-                        <a href="{{ route('categories.index') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-900">Batal</a>
-                        <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition shadow-md shadow-indigo-600/20">
-                            Simpan Kategori
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div>
+                    <x-input-label for="description" :value="__('Keterangan')" />
+                    <textarea id="description" name="description" rows="4" class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Catatan opsional...">{{ old('description') }}</textarea>
+                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-6 border-t border-slate-100">
+                    <a href="{{ route('categories.index') }}" class="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all">
+                        Batal
+                    </a>
+                    <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all">
+                        Simpan Kategori
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </x-app-layout>

@@ -1,12 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Penerimaan Gudang (Barang Masuk)') }}
-            </h2>
-            <a href="{{ route('barang-masuk.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg transition-colors">
-                Kembali
-            </a>
+        <div class="flex items-center gap-4 min-w-0">
+            <x-back-button />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Penerimaan Gudang (Barang Masuk)') }}
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Formulir penerimaan stok fisik ke dalam lokasi rak.</p>
+            </div>
         </div>
     </x-slot>
 

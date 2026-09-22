@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('nomor_opname')->unique();
             $table->date('tanggal');
-            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses')->onDelete('set null');
+            $table->foreignUuid('warehouse_id')->nullable()->constrained('warehouses')->onDelete('set null');
             $table->foreignId('location_id')->nullable()->constrained('locations')->onDelete('set null');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['draft', 'reviewed', 'completed'])->default('draft');
@@ -56,7 +56,7 @@ return new class extends Migration
             $table->decimal('stok_sistem', 15, 2);
             $table->decimal('stok_adjustment', 15, 2); // selisih perubahan (+ atau -)
             $table->decimal('stok_akhir', 15, 2);
-            $table->string('alasan'); // BR-006: Adjustment WAJIB memiliki alasan
+            $table->string('alasan');
             $table->timestamps();
         });
 
@@ -87,9 +87,9 @@ return new class extends Migration
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->string('action'); // login, create, update, delete, posting, approve
-            $table->string('module'); // Master, Receiving, Outbound, StockOpname, dll
-            $table->unsignedBigInteger('record_id')->nullable();
+            $table->string('action');
+            $table->string('module');
+            $table->string('record_id')->nullable(); // string to support numeric & uuid IDs
             $table->json('old_values')->nullable();
             $table->json('new_values')->nullable();
             $table->string('ip_address')->nullable();

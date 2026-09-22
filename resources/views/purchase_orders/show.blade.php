@@ -1,18 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-bold text-xl text-slate-800 leading-tight">
-                {{ __('Detail Purchase Order (PO): ') }} {{ $po->no_po }}
-            </h2>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('purchase-orders.print', $po) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-all shadow-md shadow-indigo-600/20">
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+                <x-back-button />
+                <div class="min-w-0">
+                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                        {{ __('Detail Purchase Order (PO): ') }} {{ $po->no_po }}
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-1">Informasi rincian pesanan & status pengiriman.</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 shrink-0">
+                <a href="{{ route('purchase-orders.print', $po) }}" target="_blank" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-indigo-600/20">
                     <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                     </svg>
                     Cetak Dokumen PO
-                </a>
-                <a href="{{ route('purchase-orders.index') }}" class="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-colors">
-                    &larr; Kembali
                 </a>
             </div>
         </div>
@@ -64,12 +67,29 @@
                         @endif
 
                         @if(in_array($po->status, ['dikirim', 'diterima_sebagian']) && auth()->user()->hasRole(['admin', 'purchasing']))
-                            <form method="POST" action="{{ route('purchase-orders.cancel', $po->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan PO ini?')">
-                                @csrf
-                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-rose-600 hover:bg-rose-50 text-rose-600 text-xs font-semibold rounded-xl transition-colors">
+                            <div x-data="{ open: false }">
+                                <button type="button" @click="open = true" class="inline-flex items-center px-4 py-2 border border-rose-600 hover:bg-rose-50 text-rose-600 text-xs font-semibold rounded-xl transition-colors">
                                     Batalkan PO
                                 </button>
-                            </form>
+                                <div x-show="open" x-cloak x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @keydown.escape.window="open = false">
+                                    <div x-show="open" x-transition.scale @click.outside="open = false" class="w-full max-w-md rounded-xl bg-white shadow-2xl">
+                                        <div class="flex items-center justify-between border-b px-6 py-4">
+                                            <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Pembatalan PO</h3>
+                                            <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                                        </div>
+                                        <div class="px-6 py-5">
+                                            <p class="text-sm text-gray-600">Apakah Anda yakin ingin membatalkan PO <span class="font-semibold text-gray-900">{{ $po->no_po }}</span>?</p>
+                                        </div>
+                                        <div class="flex justify-end gap-3 border-t bg-gray-50 px-6 py-4 rounded-b-xl">
+                                            <button type="button" @click="open = false" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Batal</button>
+                                            <form method="POST" action="{{ route('purchase-orders.cancel', $po->id) }}">
+                                                @csrf
+                                                <button type="submit" class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">Ya, Batalkan</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                     </div>
                 </div>
