@@ -59,6 +59,16 @@ class Barang extends Model
         return $this->location();
     }
 
+    public function warehouse()
+    {
+        return $this->hasOneThrough(Warehouse::class, Location::class, 'id', 'id', 'location_id', 'warehouse_id');
+    }
+
+    public function gudang()
+    {
+        return $this->warehouse();
+    }
+
     public function batches()
     {
         return $this->hasMany(InventoryBatch::class, 'barang_id');

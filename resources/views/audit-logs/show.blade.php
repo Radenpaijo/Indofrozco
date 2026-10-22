@@ -142,20 +142,20 @@
             <!-- Old Values vs New Values Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                 <!-- Nilai Sebelum (Old Values) -->
-                <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5">
+                <div class="bg-slate-50/70 border border-slate-300 rounded-2xl p-5">
                     <h4 class="font-bold text-xs uppercase tracking-wider text-slate-600 mb-4 flex items-center">
                         <span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-2 shadow-sm"></span> Nilai Sebelum (Old Values)
                     </h4>
                     @if(is_array($oldValuesParsed) && count($oldValuesParsed) > 0)
-                        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-white rounded-xl border border-slate-300 overflow-hidden shadow-sm">
                             <table class="w-full text-left border-collapse text-xs">
-                                <tbody class="divide-y divide-slate-100">
+                                <tbody class="divide-y divide-slate-200">
                                     @foreach($oldValuesParsed as $key => $val)
-                                        <tr class="hover:bg-slate-50/60">
-                                            <td class="py-2.5 px-3.5 font-bold text-slate-600 bg-slate-50/50 w-2/5 border-r border-slate-100">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="py-2.5 px-3.5 font-bold text-slate-700 bg-slate-100 w-2/5 border-r border-slate-300">
                                                 {{ $labelMapping[$key] ?? \Illuminate\Support\Str::headline($key) }}
                                             </td>
-                                            <td class="py-2.5 px-3.5 text-slate-800 font-semibold">
+                                            <td class="py-2.5 px-3.5 text-slate-800 font-semibold border-r border-slate-200">
                                                 {!! $formatDisplayValue($key, $val) !!}
                                             </td>
                                         </tr>
@@ -164,7 +164,7 @@
                             </table>
                         </div>
                     @elseif(is_string($oldValuesParsed) && trim($oldValuesParsed) !== '')
-                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 leading-relaxed">
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 leading-relaxed">
                             {{ $oldValuesParsed }}
                         </div>
                     @else
@@ -173,20 +173,20 @@
                 </div>
 
                 <!-- Nilai Sesudah (New Values) -->
-                <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5">
+                <div class="bg-slate-50/70 border border-slate-300 rounded-2xl p-5">
                     <h4 class="font-bold text-xs uppercase tracking-wider text-slate-600 mb-4 flex items-center">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2 shadow-sm"></span> Nilai Sesudah (New Values)
                     </h4>
                     @if(is_array($newValuesParsed) && count($newValuesParsed) > 0)
-                        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-white rounded-xl border border-slate-300 overflow-hidden shadow-sm">
                             <table class="w-full text-left border-collapse text-xs">
-                                <tbody class="divide-y divide-slate-100">
+                                <tbody class="divide-y divide-slate-200">
                                     @foreach($newValuesParsed as $key => $val)
-                                        <tr class="hover:bg-slate-50/60">
-                                            <td class="py-2.5 px-3.5 font-bold text-slate-600 bg-slate-50/50 w-2/5 border-r border-slate-100">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="py-2.5 px-3.5 font-bold text-slate-700 bg-slate-100 w-2/5 border-r border-slate-300">
                                                 {{ $labelMapping[$key] ?? \Illuminate\Support\Str::headline($key) }}
                                             </td>
-                                            <td class="py-2.5 px-3.5 text-slate-800 font-semibold">
+                                            <td class="py-2.5 px-3.5 text-slate-800 font-semibold border-r border-slate-200">
                                                 {!! $formatDisplayValue($key, $val) !!}
                                             </td>
                                         </tr>
@@ -195,7 +195,7 @@
                             </table>
                         </div>
                     @elseif(is_string($newValuesParsed) && trim($newValuesParsed) !== '')
-                        <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 leading-relaxed">
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 leading-relaxed">
                             {{ $newValuesParsed }}
                         </div>
                     @else

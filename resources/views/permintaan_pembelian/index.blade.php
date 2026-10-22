@@ -21,80 +21,86 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Alert Messages -->
-            @if(session('success'))
-                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded shadow-sm">
-                    <span class="text-emerald-800 font-medium">{{ session('success') }}</span>
-                </div>
-            @endif
+    <div class="w-full space-y-6">
 
-            <!-- Table Card -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-100">
-                        <thead>
-                            <tr class="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                <th class="px-6 py-4">No. PR</th>
-                                <th class="px-6 py-4">Tanggal Diajukan</th>
-                                <th class="px-6 py-4">Pembuat Requisition (Gudang)</th>
-                                <th class="px-6 py-4">Jumlah Item</th>
-                                <th class="px-6 py-4">Status</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 text-sm">
-                            @forelse($prs as $pr)
-                                <tr class="hover:bg-gray-50/50 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-gray-700">
-                                        {{ $pr->no_pr }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-600">
-                                        {{ \Carbon\Carbon::parse($pr->tanggal)->format('d M Y H:i') }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-900 font-medium">
-                                        {{ $pr->user->name ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-500">
-                                        {{ $pr->details->count() }} Item
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        @if($pr->status === 'pending')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-amber-50 text-amber-700 rounded-full">PENDING</span>
-                                        @elseif($pr->status === 'di_po')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 rounded-full">TELAH DI-PO-KAN</span>
-                                        @elseif($pr->status === 'dibatalkan')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-gray-100 text-gray-500 rounded-full">DIBATALKAN</span>
-                                        @else
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-gray-50 text-gray-600 rounded-full">{{ strtoupper($pr->status) }}</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-right space-x-2">
-                                        <a href="{{ route('permintaan-pembelian.show', $pr->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs transition-colors">Detail PR</a>
-                                        
-                                        @if($pr->status === 'pending' && auth()->user()->hasRole(['admin', 'purchasing']))
-                                            <a href="{{ route('purchase-orders.create', ['pr_id' => $pr->id]) }}" class="text-emerald-600 hover:text-emerald-900 font-bold text-xs transition-colors">Proses Jadi PO</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-gray-500">
-                                        Belum ada pengajuan Purchase Requisition (PR).
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Table Card -->
+        <x-table>
+            <x-table.header>
+                <x-table.row>
+                    <x-table.head>No. PR</x-table.head>
+                    <x-table.head>Tanggal Diajukan</x-table.head>
+                    <x-table.head>Pembuat Requisition (Gudang)</x-table.head>
+                    <x-table.head>Jumlah Item</x-table.head>
+                    <x-table.head class="text-center">Status</x-table.head>
+                    <x-table.head class="text-center">Aksi</x-table.head>
+                </x-table.row>
+            </x-table.header>
+            <x-table.body>
+                @forelse($prs as $pr)
+                    <x-table.row>
+                        <x-table.cell class="font-mono font-semibold text-slate-800">
+                            {{ $pr->no_pr }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-600">
+                            {{ \Carbon\Carbon::parse($pr->tanggal)->format('d M Y H:i') }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-900 font-medium">
+                            {{ $pr->user->name ?? '-' }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-600">
+                            {{ $pr->details->count() }} Item
+                        </x-table.cell>
+                        <x-table.cell class="text-center">
+                            @if($pr->status === 'pending')
+                                <x-badge variant="outline">PENDING</x-badge>
+                            @elseif($pr->status === 'di_po')
+                                <x-badge variant="secondary">TELAH DI-PO-KAN</x-badge>
+                            @elseif($pr->status === 'dibatalkan')
+                                <x-badge variant="destructive">DIBATALKAN</x-badge>
+                            @else
+                                <x-badge variant="outline">{{ strtoupper($pr->status) }}</x-badge>
+                            @endif
+                        </x-table.cell>
+                        <x-table.cell class="text-center">
+                            <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                <a href="{{ route('permintaan-pembelian.show', $pr->id) }}">
+                                    <x-button variant="outline" size="sm">
+                                        <svg class="w-3.5 h-3.5 mr-1 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        Detail PR
+                                    </x-button>
+                                </a>
+                                
+                                @if($pr->status === 'pending' && auth()->user()->hasRole(['admin', 'purchasing']))
+                                    <a href="{{ route('purchase-orders.create', ['pr_id' => $pr->id]) }}">
+                                        <x-button variant="indigo" size="sm">
+                                            <svg class="w-3.5 h-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                            Proses Jadi PO
+                                        </x-button>
+                                    </a>
+                                @endif
+                            </div>
+                        </x-table.cell>
+                    </x-table.row>
+                @empty
+                    <x-table.row>
+                        <x-table.cell colspan="6" class="py-8 text-center text-slate-400">
+                            Belum ada pengajuan Purchase Requisition (PR).
+                        </x-table.cell>
+                    </x-table.row>
+                @endforelse
+            </x-table.body>
+        </x-table>
 
-                @if($prs->hasPages())
-                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-                        {{ $prs->links() }}
-                    </div>
-                @endif
+        @if($prs->hasPages())
+            <div class="px-6 py-4 bg-white rounded-lg border border-slate-300">
+                {{ $prs->links() }}
             </div>
-        </div>
+        @endif
+    </div>
     </div>
 </x-app-layout>

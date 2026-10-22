@@ -11,7 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="max-w-2xl mx-auto">
+    <div class="w-full">
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
             <form action="{{ route('warehouses.store') }}" method="POST" class="space-y-6">
                 @csrf
@@ -33,7 +33,12 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <x-input-label for="warehouse_type_id" :value="__('Tipe Gudang (Dinamis)')" />
+                        <div class="flex items-center justify-between">
+                            <x-input-label for="warehouse_type_id" :value="__('Tipe Gudang *')" />
+                            <a href="{{ route('warehouse-types.create') }}" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center">
+                                + Tambah Tipe Gudang
+                            </a>
+                        </div>
                         <select id="warehouse_type_id" name="warehouse_type_id" required class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
                             <option value="">-- Pilih Tipe Gudang --</option>
                             @foreach($types as $type)
@@ -42,6 +47,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @if($types->isEmpty())
+                            <p class="text-xs text-amber-600 mt-1 font-semibold">⚠️ Belum ada Tipe Gudang. <a href="{{ route('warehouse-types.create') }}" target="_blank" class="underline text-indigo-600">Klik di sini untuk menambah Tipe Gudang Baru</a>.</p>
+                        @endif
                         <x-input-error :messages="$errors->get('warehouse_type_id')" class="mt-2" />
                     </div>
 

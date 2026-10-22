@@ -12,7 +12,11 @@ class InventoryTransaction extends Model
         'batch_id',
         'location_id',
         'type',
+        'jenis_transaksi',
+        'nomor_referensi',
         'jumlah',
+        'stok_sebelum',
+        'stok_sesudah',
         'reference_type',
         'reference_id',
         'user_id',
@@ -21,6 +25,8 @@ class InventoryTransaction extends Model
 
     protected $casts = [
         'jumlah' => 'decimal:2',
+        'stok_sebelum' => 'decimal:2',
+        'stok_sesudah' => 'decimal:2',
     ];
 
     public function barang(): BelongsTo

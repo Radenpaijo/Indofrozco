@@ -21,23 +21,10 @@
         </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Alert Messages -->
-            @if(session('success'))
-                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl shadow-sm">
-                    <span class="text-emerald-800 font-medium">{{ session('success') }}</span>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="bg-rose-50 border border-rose-200 p-4 rounded-xl shadow-sm">
-                    <span class="text-rose-800 font-medium">{{ session('error') }}</span>
-                </div>
-            @endif
+    <div class="w-full space-y-6">
 
             <!-- PO Info Card -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 flex flex-wrap justify-between items-center gap-4">
+            <div class="bg-white rounded-lg shadow-sm border border-slate-300 p-6 flex flex-wrap justify-between items-center gap-4">
                 <div class="space-y-1">
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nomor PO</p>
                     <h3 class="text-2xl font-black text-slate-800 font-mono">{{ $po->no_po }}</h3>
@@ -48,13 +35,7 @@
                 </div>
 
                 <div class="flex flex-col items-end gap-3">
-                    <span class="px-4 py-1.5 text-xs font-bold rounded-full 
-                        @if($po->status === 'dikirim') bg-indigo-100 text-indigo-700
-                        @elseif($po->status === 'diterima_sebagian') bg-amber-100 text-amber-700
-                        @elseif($po->status === 'selesai') bg-emerald-100 text-emerald-700
-                        @elseif($po->status === 'dibatalkan') bg-slate-100 text-slate-500
-                        @else bg-slate-50 text-slate-600
-                        @endif">
+                    <span class="px-3 py-1 text-xs font-semibold rounded bg-slate-100 text-slate-700 border border-slate-300">
                         {{ strtoupper($po->status) }}
                     </span>
 
@@ -96,24 +77,24 @@
             </div>
 
             <!-- Item Details Table & Financial Summary -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+            <div class="bg-white rounded-lg shadow-sm border border-slate-300 overflow-hidden">
+                <div class="p-4 border-b border-slate-200 flex justify-between items-center">
                     <h4 class="text-md font-bold text-slate-800">Daftar Detail Barang PO & Pemenuhan</h4>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-slate-100">
+                    <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="px-6 py-4">Kode Barang</th>
-                                <th class="px-6 py-4">Nama Barang (PO)</th>
-                                <th class="px-6 py-4">Jumlah Pesan</th>
-                                <th class="px-6 py-4">Harga Satuan</th>
-                                <th class="px-6 py-4">Subtotal</th>
-                                <th class="px-6 py-4">Diterima Aktual</th>
-                                <th class="px-6 py-4">Status Pemenuhan</th>
+                            <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                                <th class="py-3.5 px-4 border-r border-slate-300">Kode Barang</th>
+                                <th class="py-3.5 px-4 border-r border-slate-300">Nama Barang (PO)</th>
+                                <th class="py-3.5 px-4 border-r border-slate-300">Jumlah Pesan</th>
+                                <th class="py-3.5 px-4 border-r border-slate-300">Harga Satuan</th>
+                                <th class="py-3.5 px-4 border-r border-slate-300">Subtotal</th>
+                                <th class="py-3.5 px-4 border-r border-slate-300">Diterima Aktual</th>
+                                <th class="py-3.5 px-4 border-r border-slate-300">Status Pemenuhan</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-sm">
+                        <tbody class="divide-y divide-slate-200 text-sm">
                             @php $calculatedSubtotal = 0; @endphp
                             @foreach($po->details as $detail)
                                 @php 
@@ -121,22 +102,22 @@
                                     $itemSubtotal = $detail->subtotal > 0 ? $detail->subtotal : ($detail->jumlah * $detail->harga_satuan);
                                     $calculatedSubtotal += $itemSubtotal;
                                 @endphp
-                                <tr class="hover:bg-slate-50/80">
-                                    <td class="px-6 py-4 font-mono font-semibold text-indigo-600">{{ $detail->barang->kode_barang ?? '-' }}</td>
-                                    <td class="px-6 py-4 font-semibold text-slate-900">{{ $detail->snapshot_nama_barang ?? ($detail->barang->nama_barang ?? '-') }}</td>
-                                    <td class="px-6 py-4 text-slate-800 font-bold">{{ $detail->jumlah }} {{ $detail->barang->satuan ?? '' }}</td>
-                                    <td class="px-6 py-4 text-slate-600 font-mono text-xs">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                                    <td class="px-6 py-4 text-slate-900 font-bold font-mono">Rp {{ number_format($itemSubtotal, 0, ',', '.') }}</td>
-                                    <td class="px-6 py-4 font-bold {{ $receivedQty >= $detail->jumlah ? 'text-emerald-600' : 'text-amber-600' }}">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="py-3.5 px-4 border-r border-slate-200 font-mono font-semibold text-indigo-600">{{ $detail->barang->kode_barang ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 border-r border-slate-200 font-semibold text-slate-900">{{ $detail->snapshot_nama_barang ?? ($detail->barang->nama_barang ?? '-') }}</td>
+                                    <td class="py-3.5 px-4 border-r border-slate-200 text-slate-800 font-bold">{{ $detail->jumlah }} {{ $detail->barang->satuan ?? '' }}</td>
+                                    <td class="py-3.5 px-4 border-r border-slate-200 text-slate-600 font-mono text-xs">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                                    <td class="py-3.5 px-4 border-r border-slate-200 text-slate-900 font-bold font-mono">Rp {{ number_format($itemSubtotal, 0, ',', '.') }}</td>
+                                    <td class="py-3.5 px-4 border-r border-slate-200 font-bold text-slate-800">
                                         {{ $receivedQty }}
                                     </td>
-                                    <td class="px-6 py-4">
+                                    <td class="py-3.5 px-4 border-r border-slate-200">
                                         @if($receivedQty >= $detail->jumlah)
-                                            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">Selesai</span>
+                                            <span class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">Selesai</span>
                                         @elseif($receivedQty > 0)
-                                            <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">Kurang {{ $detail->jumlah - $receivedQty }}</span>
+                                            <span class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">Kurang {{ $detail->jumlah - $receivedQty }}</span>
                                         @else
-                                            <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">Belum Datang</span>
+                                            <span class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">Belum Datang</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -180,31 +161,31 @@
 
             <!-- Goods Receipt History -->
             @if($po->barangMasuks->isNotEmpty())
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-                    <div class="p-6 border-b border-slate-100">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-300 overflow-hidden">
+                    <div class="p-4 border-b border-slate-200">
                         <h4 class="text-md font-bold text-slate-800">Riwayat Catatan Penerimaan Gudang (Barang Masuk)</h4>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-slate-100 text-sm">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-50 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    <th class="px-6 py-4">No. Penerimaan</th>
-                                    <th class="px-6 py-4">Surat Jalan</th>
-                                    <th class="px-6 py-4">Nama Barang</th>
-                                    <th class="px-6 py-4">Jumlah Diterima</th>
-                                    <th class="px-6 py-4">Penerima (Gudang)</th>
-                                    <th class="px-6 py-4">Tanggal Masuk</th>
+                                <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                                    <th class="py-3.5 px-4 border-r border-slate-300">No. Penerimaan</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Surat Jalan</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Nama Barang</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Jumlah Diterima</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Penerima (Gudang)</th>
+                                    <th class="py-3.5 px-4">Tanggal Masuk</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody class="divide-y divide-slate-200 text-sm">
                                 @foreach($po->barangMasuks as $masuk)
-                                    <tr>
-                                        <td class="px-6 py-4 font-mono font-semibold text-indigo-600">{{ $masuk->no_masuk }}</td>
-                                        <td class="px-6 py-4 text-slate-700 font-semibold">{{ $masuk->no_surat_jalan }}</td>
-                                        <td class="px-6 py-4 text-slate-900 font-medium">{{ $masuk->snapshot_nama_barang ?? ($masuk->barang->nama_barang ?? '-') }}</td>
-                                        <td class="px-6 py-4 font-bold text-emerald-600">+{{ $masuk->jumlah }}</td>
-                                        <td class="px-6 py-4 text-slate-600">{{ $masuk->user->name ?? '-' }}</td>
-                                        <td class="px-6 py-4 text-slate-600">{{ \Carbon\Carbon::parse($masuk->tanggal)->format('d F Y H:i') }}</td>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="py-3.5 px-4 border-r border-slate-200 font-mono font-semibold text-indigo-600">{{ $masuk->no_masuk }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 text-slate-700 font-semibold">{{ $masuk->no_surat_jalan }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 text-slate-900 font-medium">{{ $masuk->snapshot_nama_barang ?? ($masuk->barang->nama_barang ?? '-') }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 font-bold text-emerald-600">+{{ $masuk->jumlah }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 text-slate-600">{{ $masuk->user->name ?? '-' }}</td>
+                                        <td class="py-3.5 px-4 text-slate-600">{{ \Carbon\Carbon::parse($masuk->tanggal)->format('d F Y H:i') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

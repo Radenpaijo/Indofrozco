@@ -21,78 +21,67 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Alert Messages -->
-            @if(session('success'))
-                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded shadow-sm">
-                    <span class="text-emerald-800 font-medium">{{ session('success') }}</span>
-                </div>
-            @endif
+    <div class="w-full space-y-6">
 
-            <!-- Table Card -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-100">
-                        <thead>
-                            <tr class="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                <th class="px-6 py-4">No. Penerimaan</th>
-                                <th class="px-6 py-4">No. Surat Jalan</th>
-                                <th class="px-6 py-4">Nama Barang</th>
-                                <th class="px-6 py-4">Jumlah Diterima</th>
-                                <th class="px-6 py-4">Petugas Gudang</th>
-                                <th class="px-6 py-4">Ref. PO</th>
-                                <th class="px-6 py-4">Tanggal Penerimaan</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 text-sm">
-                            @forelse($barangMasuks as $masuk)
-                                <tr class="hover:bg-gray-50/50 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-gray-700">
-                                        {{ $masuk->no_masuk }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-900 font-semibold">
-                                        {{ $masuk->no_surat_jalan }}
-                                    </td>
-                                    <td class="px-6 py-4 font-medium text-gray-800">
-                                        {{ $masuk->snapshot_nama_barang ?? ($masuk->barang->nama_barang ?? '-') }}
-                                    </td>
-                                    <td class="px-6 py-4 font-bold text-emerald-600">
-                                        +{{ $masuk->jumlah }} {{ $masuk->barang->satuan ?? '' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-600">
-                                        {{ $masuk->user->name ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-500 font-mono">
-                                        @if($masuk->purchaseOrder)
-                                            <a href="{{ route('purchase-orders.show', $masuk->purchaseOrder->id) }}" class="text-indigo-600 hover:underline">
-                                                {{ $masuk->purchaseOrder->no_po }}
-                                            </a>
-                                        @else
-                                            <span class="text-gray-400 italic">Manual (Tanpa PO)</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-500">
-                                        {{ \Carbon\Carbon::parse($masuk->tanggal)->format('d M Y H:i') }}
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="px-6 py-8 text-center text-gray-500">
-                                        Belum ada penerimaan gudang.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Table Card -->
+        <x-table>
+            <x-table.header>
+                <x-table.row>
+                    <x-table.head>No. Penerimaan</x-table.head>
+                    <x-table.head>No. Surat Jalan</x-table.head>
+                    <x-table.head>Nama Barang</x-table.head>
+                    <x-table.head>Jumlah Diterima</x-table.head>
+                    <x-table.head>Petugas Gudang</x-table.head>
+                    <x-table.head>Ref. PO</x-table.head>
+                    <x-table.head>Tanggal Penerimaan</x-table.head>
+                </x-table.row>
+            </x-table.header>
+            <x-table.body>
+                @forelse($barangMasuks as $masuk)
+                    <x-table.row>
+                        <x-table.cell class="font-mono font-semibold text-slate-800">
+                            {{ $masuk->no_masuk }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-900 font-semibold">
+                            {{ $masuk->no_surat_jalan }}
+                        </x-table.cell>
+                        <x-table.cell class="font-medium text-slate-800">
+                            {{ $masuk->snapshot_nama_barang ?? ($masuk->barang->nama_barang ?? '-') }}
+                        </x-table.cell>
+                        <x-table.cell class="font-bold text-emerald-600">
+                            +{{ $masuk->jumlah }} {{ $masuk->barang->satuan ?? '' }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-600">
+                            {{ $masuk->user->name ?? '-' }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-500 font-mono">
+                            @if($masuk->purchaseOrder)
+                                <a href="{{ route('purchase-orders.show', $masuk->purchaseOrder->id) }}" class="text-indigo-600 hover:underline font-semibold">
+                                    {{ $masuk->purchaseOrder->no_po }}
+                                </a>
+                            @else
+                                <span class="text-slate-400 italic">Manual (Tanpa PO)</span>
+                            @endif
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-500">
+                            {{ \Carbon\Carbon::parse($masuk->tanggal)->format('d M Y H:i') }}
+                        </x-table.cell>
+                    </x-table.row>
+                @empty
+                    <x-table.row>
+                        <x-table.cell colspan="7" class="py-8 text-center text-slate-400">
+                            Belum ada penerimaan gudang.
+                        </x-table.cell>
+                    </x-table.row>
+                @endforelse
+            </x-table.body>
+        </x-table>
 
-                @if($barangMasuks->hasPages())
-                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-                        {{ $barangMasuks->links() }}
-                    </div>
-                @endif
+        @if($barangMasuks->hasPages())
+            <div class="px-6 py-4 bg-white rounded-lg border border-slate-300">
+                {{ $barangMasuks->links() }}
             </div>
-        </div>
+        @endif
+    </div>
     </div>
 </x-app-layout>

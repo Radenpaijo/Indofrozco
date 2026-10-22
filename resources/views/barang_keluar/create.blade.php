@@ -11,14 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-xl mx-auto sm:px-6 lg:px-8">
-            <!-- Error Alert -->
-            @if(session('error'))
-                <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded shadow-sm mb-6">
-                    <span class="text-rose-800 font-medium">{{ session('error') }}</span>
-                </div>
-            @endif
+    <div class="w-full">
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                 <form method="POST" action="{{ route('barang-keluar.store') }}" class="space-y-6">

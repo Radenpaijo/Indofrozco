@@ -11,8 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="w-full">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-slate-200/80 p-6">
                 <div class="mb-4 p-3 bg-blue-50 text-blue-800 border border-blue-200 rounded-xl text-xs">
                     <strong>Aturan BR-005:</strong> Mutasi lokasi memindahkan stok dari satu rak ke rak lain. <strong>Total stok barang di gudang tidak berubah.</strong>

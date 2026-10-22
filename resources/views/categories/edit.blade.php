@@ -11,50 +11,50 @@
         </div>
     </x-slot>
 
-    <div class="max-w-2xl mx-auto">
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+    <div class="w-full">
+        <x-card class="p-6 sm:p-8">
             <form action="{{ route('categories.update', $category) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <x-input-label for="code" :value="__('Kode Kategori')" />
-                        <x-text-input id="code" class="block mt-1 w-full font-mono bg-slate-50" type="text" name="code" :value="old('code', $category->code)" required autofocus />
+                    <div class="space-y-2">
+                        <x-label for="code">Kode Kategori</x-label>
+                        <x-input id="code" class="font-mono bg-slate-50" type="text" name="code" :value="old('code', $category->code)" required autofocus />
                         <x-input-error :messages="$errors->get('code')" class="mt-2" />
                     </div>
 
-                    <div>
-                        <x-input-label for="name" :value="__('Nama Kategori')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name', $category->name)" required />
+                    <div class="space-y-2">
+                        <x-label for="name">Nama Kategori</x-label>
+                        <x-input id="name" type="text" name="name" :value="old('name', $category->name)" required />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
                 </div>
 
-                <div>
-                    <x-input-label for="status" :value="__('Status')" />
-                    <select id="status" name="status" class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                <div class="space-y-2">
+                    <x-label for="status">Status</x-label>
+                    <x-select id="status" name="status">
                         <option value="active" {{ old('status', $category->status) === 'active' ? 'selected' : '' }}>Aktif</option>
                         <option value="inactive" {{ old('status', $category->status) === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                    </select>
+                    </x-select>
                     <x-input-error :messages="$errors->get('status')" class="mt-2" />
                 </div>
 
-                <div>
-                    <x-input-label for="description" :value="__('Keterangan')" />
-                    <textarea id="description" name="description" rows="4" class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">{{ old('description', $category->description) }}</textarea>
+                <div class="space-y-2">
+                    <x-label for="description">Keterangan</x-label>
+                    <textarea id="description" name="description" rows="4" class="flex min-h-[80px] w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">{{ old('description', $category->description) }}</textarea>
                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
                 <div class="flex items-center justify-end space-x-3 pt-6 border-t border-slate-100">
-                    <a href="{{ route('categories.index') }}" class="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all">
-                        Batal
+                    <a href="{{ route('categories.index') }}">
+                        <x-button type="button" variant="outline">Batal</x-button>
                     </a>
-                    <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all">
+                    <x-button type="submit" variant="indigo">
                         Simpan Perubahan
-                    </button>
+                    </x-button>
                 </div>
             </form>
-        </div>
+        </x-card>
     </div>
 </x-app-layout>

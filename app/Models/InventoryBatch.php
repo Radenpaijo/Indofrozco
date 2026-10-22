@@ -15,6 +15,8 @@ class InventoryBatch extends Model
         'tanggal_masuk',
         'tanggal_kadaluarsa',
         'stok',
+        'stok_awal',
+        'stok_sekarang',
         'status',
     ];
 
@@ -22,6 +24,8 @@ class InventoryBatch extends Model
         'tanggal_masuk' => 'date',
         'tanggal_kadaluarsa' => 'date',
         'stok' => 'decimal:2',
+        'stok_awal' => 'decimal:2',
+        'stok_sekarang' => 'decimal:2',
     ];
 
     public function barang(): BelongsTo

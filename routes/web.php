@@ -20,11 +20,15 @@ use App\Http\Controllers\StockMutationController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseTypeController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
 
 Route::middleware(['auth'])->group(function () {
+    // Redirect legacy /admin to Dashboard
+    Route::redirect('/admin', '/dashboard');
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -35,10 +39,19 @@ Route::middleware(['auth'])->group(function () {
 
     // --- MASTER DATA ROUTES ---
     Route::resource('categories', CategoryController::class);
+    Route::patch('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
+
     Route::resource('units', UnitController::class);
+    Route::patch('units/{unit}/toggle-status', [UnitController::class, 'toggleStatus'])->name('units.toggle-status');
+
     Route::resource('warehouse-types', WarehouseTypeController::class);
+    Route::patch('warehouse-types/{warehouse_type}/toggle-status', [WarehouseTypeController::class, 'toggleStatus'])->name('warehouse-types.toggle-status');
+
     Route::resource('warehouses', WarehouseController::class);
+    Route::patch('warehouses/{warehouse}/toggle-status', [WarehouseController::class, 'toggleStatus'])->name('warehouses.toggle-status');
+
     Route::resource('locations', LocationController::class);
+    Route::patch('locations/{location}/toggle-status', [LocationController::class, 'toggleStatus'])->name('locations.toggle-status');
 
     // --- BARANG ROUTES ---
     Route::get('/barangs', [BarangController::class, 'index'])->name('barangs.index');
@@ -105,4 +118,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

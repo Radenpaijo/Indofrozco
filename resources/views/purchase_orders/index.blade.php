@@ -21,86 +21,101 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Alert Messages -->
-            @if(session('success'))
-                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded shadow-sm">
-                    <span class="text-emerald-800 font-medium">{{ session('success') }}</span>
-                </div>
-            @endif
+    <div class="w-full space-y-6">
 
-            <!-- Table Card -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-100">
-                        <thead>
-                            <tr class="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                <th class="px-6 py-4">No. PO</th>
-                                <th class="px-6 py-4">Tanggal Order</th>
-                                <th class="px-6 py-4">Supplier</th>
-                                <th class="px-6 py-4">Purchasing Agent</th>
-                                <th class="px-6 py-4">Ref. PR</th>
-                                <th class="px-6 py-4">Status PO</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 text-sm">
-                            @forelse($pos as $po)
-                                <tr class="hover:bg-gray-50/50 transition-colors">
-                                    <td class="px-6 py-4 font-mono font-semibold text-gray-700">
-                                        {{ $po->no_po }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-600">
-                                        {{ \Carbon\Carbon::parse($po->tanggal)->format('d M Y') }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-900 font-medium">
-                                        {{ $po->supplier->nama_supplier ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-600">
-                                        {{ $po->user->name ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 font-mono text-gray-500">
-                                        {{ $po->permintaanPembelian->no_pr ?? 'Manual (Non-PR)' }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        @if($po->status === 'dikirim')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-full">DIKIRIM</span>
-                                        @elseif($po->status === 'diterima_sebagian')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-amber-50 text-amber-700 rounded-full font-bold">SEBAGIAN DITERIMA</span>
-                                        @elseif($po->status === 'selesai')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 rounded-full">SELESAI</span>
-                                        @elseif($po->status === 'dibatalkan')
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-gray-100 text-gray-500 rounded-full">DIBATALKAN</span>
-                                        @else
-                                            <span class="px-2.5 py-1 text-xs font-bold bg-gray-50 text-gray-600 rounded-full">{{ strtoupper($po->status) }}</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-right space-x-2">
-                                        <a href="{{ route('purchase-orders.show', $po->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs transition-colors">Detail PO</a>
-                                        
-                                        @if(in_array($po->status, ['dikirim', 'diterima_sebagian']) && auth()->user()->hasRole(['admin', 'gudang']))
-                                            <a href="{{ route('barang-masuk.create', ['po_id' => $po->id]) }}" class="text-emerald-600 hover:text-emerald-900 font-bold text-xs transition-colors">Terima Barang</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="px-6 py-8 text-center text-gray-500">
-                                        Belum ada Purchase Order (PO) yang dibuat.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Table Card -->
+        <x-table>
+            <x-table.header>
+                <x-table.row>
+                    <x-table.head>No. PO</x-table.head>
+                    <x-table.head>Tanggal Order</x-table.head>
+                    <x-table.head>Supplier</x-table.head>
+                    <x-table.head>Purchasing Agent</x-table.head>
+                    <x-table.head>Ref. PR</x-table.head>
+                    <x-table.head class="text-center">Status PO</x-table.head>
+                    <x-table.head class="text-center">Aksi</x-table.head>
+                </x-table.row>
+            </x-table.header>
+            <x-table.body>
+                @forelse($pos as $po)
+                    <x-table.row>
+                        <x-table.cell class="font-mono font-semibold text-slate-800">
+                            {{ $po->no_po }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-600">
+                            {{ \Carbon\Carbon::parse($po->tanggal)->format('d M Y') }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-900 font-medium">
+                            {{ $po->supplier->nama_supplier ?? '-' }}
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-600">
+                            {{ $po->user->name ?? '-' }}
+                        </x-table.cell>
+                        <x-table.cell class="font-mono text-slate-600">
+                            {{ $po->permintaanPembelian->no_pr ?? 'Manual (Non-PR)' }}
+                        </x-table.cell>
+                        <x-table.cell class="text-center">
+                            @if($po->status === 'dikirim')
+                                <x-badge variant="outline">DIKIRIM</x-badge>
+                            @elseif($po->status === 'diterima_sebagian')
+                                <x-badge variant="secondary">SEBAGIAN DITERIMA</x-badge>
+                            @elseif($po->status === 'selesai')
+                                <x-badge variant="secondary">SELESAI</x-badge>
+                            @elseif($po->status === 'dibatalkan')
+                                <x-badge variant="destructive">DIBATALKAN</x-badge>
+                            @else
+                                <x-badge variant="outline">{{ strtoupper($po->status) }}</x-badge>
+                            @endif
+                        </x-table.cell>
+                        <x-table.cell class="text-center">
+                            <div class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+                                <a href="{{ route('purchase-orders.show', $po->id) }}">
+                                    <x-button variant="outline" size="sm">
+                                        <svg class="w-3.5 h-3.5 mr-1 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        Detail PO
+                                    </x-button>
+                                </a>
 
-                @if($pos->hasPages())
-                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
-                        {{ $pos->links() }}
-                    </div>
-                @endif
+                                <a href="{{ route('purchase-orders.print', $po->id) }}" target="_blank">
+                                    <x-button variant="outline" size="sm">
+                                        <svg class="w-3.5 h-3.5 mr-1 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                        </svg>
+                                        Cetak
+                                    </x-button>
+                                </a>
+                                
+                                @if(in_array($po->status, ['dikirim', 'diterima_sebagian']) && auth()->user()->hasRole(['admin', 'gudang']))
+                                    <a href="{{ route('barang-masuk.create', ['po_id' => $po->id]) }}">
+                                        <x-button variant="indigo" size="sm">
+                                            <svg class="w-3.5 h-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Terima Barang
+                                        </x-button>
+                                    </a>
+                                @endif
+                            </div>
+                        </x-table.cell>
+                    </x-table.row>
+                @empty
+                    <x-table.row>
+                        <x-table.cell colspan="7" class="py-8 text-center text-slate-400">
+                            Belum ada Purchase Order (PO) yang dibuat.
+                        </x-table.cell>
+                    </x-table.row>
+                @endforelse
+            </x-table.body>
+        </x-table>
+
+        @if($pos->hasPages())
+            <div class="px-6 py-4 bg-white rounded-lg border border-slate-300">
+                {{ $pos->links() }}
             </div>
-        </div>
+        @endif
+    </div>
     </div>
 </x-app-layout>

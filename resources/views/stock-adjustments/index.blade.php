@@ -19,56 +19,50 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            @if(session('success'))
-                <div class="p-4 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-sm font-medium">
-                    {{ session('success') }}
-                </div>
-            @endif
+    <div class="w-full space-y-6">
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-slate-200/80">
-                <div class="p-6 text-slate-900">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-slate-200 bg-slate-50/50 text-xs font-bold uppercase text-slate-500 tracking-wider">
-                                <th class="p-4">Nomor Adjustment</th>
-                                <th class="p-4">Tanggal</th>
-                                <th class="p-4">Referensi Opname</th>
-                                <th class="p-4">Dibuat Oleh</th>
-                                <th class="p-4">Status</th>
-                                <th class="p-4 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-sm">
-                            @forelse($adjustments as $adj)
-                                <tr class="hover:bg-slate-50/80 transition">
-                                    <td class="p-4 font-mono font-bold text-indigo-600">{{ $adj->nomor_adjustment }}</td>
-                                    <td class="p-4 text-slate-700 font-medium">{{ $adj->tanggal->format('d M Y') }}</td>
-                                    <td class="p-4 text-slate-600 font-mono text-xs">{{ $adj->stockOpname ? $adj->stockOpname->nomor_opname : 'Manual / Non-Opname' }}</td>
-                                    <td class="p-4 font-semibold text-slate-800">{{ $adj->user->name }}</td>
-                                    <td class="p-4">
-                                        <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700">
-                                            {{ strtoupper($adj->status) }}
-                                        </span>
-                                    </td>
-                                    <td class="p-4 text-right">
-                                        <a href="{{ route('stock-adjustments.show', $adj) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold text-xs">Detail</a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="p-8 text-center text-slate-400">Belum ada transaksi adjustment stok.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+        <x-table>
+            <x-table.header>
+                <x-table.row>
+                    <x-table.head>Nomor Adjustment</x-table.head>
+                    <x-table.head>Tanggal</x-table.head>
+                    <x-table.head>Referensi Opname</x-table.head>
+                    <x-table.head>Dibuat Oleh</x-table.head>
+                    <x-table.head>Status</x-table.head>
+                    <x-table.head class="text-right">Aksi</x-table.head>
+                </x-table.row>
+            </x-table.header>
+            <x-table.body>
+                @forelse($adjustments as $adj)
+                    <x-table.row>
+                        <x-table.cell class="font-mono font-bold text-indigo-600">{{ $adj->nomor_adjustment }}</x-table.cell>
+                        <x-table.cell class="text-slate-700 font-medium">{{ $adj->tanggal->format('d M Y') }}</x-table.cell>
+                        <x-table.cell class="text-slate-600 font-mono text-xs">{{ $adj->stockOpname ? $adj->stockOpname->nomor_opname : 'Manual / Non-Opname' }}</x-table.cell>
+                        <x-table.cell class="font-semibold text-slate-800">{{ $adj->user->name }}</x-table.cell>
+                        <x-table.cell>
+                            <x-badge variant="outline">
+                                {{ strtoupper($adj->status) }}
+                            </x-badge>
+                        </x-table.cell>
+                        <x-table.cell class="text-right">
+                            <a href="{{ route('stock-adjustments.show', $adj) }}">
+                                <x-button variant="outline" size="sm">Detail</x-button>
+                            </a>
+                        </x-table.cell>
+                    </x-table.row>
+                @empty
+                    <x-table.row>
+                        <x-table.cell colspan="6" class="p-8 text-center text-slate-400">Belum ada transaksi adjustment stok.</x-table.cell>
+                    </x-table.row>
+                @endforelse
+            </x-table.body>
+        </x-table>
 
-                    <div class="mt-4">
-                        {{ $adjustments->links() }}
-                    </div>
-                </div>
+        @if($adjustments->hasPages())
+            <div class="px-6 py-4 bg-white rounded-lg border border-slate-300">
+                {{ $adjustments->links() }}
             </div>
-        </div>
+        @endif
+    </div>
     </div>
 </x-app-layout>

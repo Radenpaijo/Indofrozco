@@ -10,76 +10,71 @@
                     <p class="text-xs text-slate-500 mt-1">Kelola unit pengeluaran & kemasan produk.</p>
                 </div>
             </div>
-            <a href="{{ route('units.create') }}" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md transition-all shrink-0">
-                <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Tambah Satuan
+            <a href="{{ route('units.create') }}" class="shrink-0">
+                <x-button variant="indigo">
+                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Satuan
+                </x-button>
             </a>
         </div>
     </x-slot>
 
     <div class="space-y-6">
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50/70 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                            <th class="py-3.5 px-6">Kode</th>
-                            <th class="py-3.5 px-6">Nama Satuan</th>
-                            <th class="py-3.5 px-6 text-center">Total Barang</th>
-                            <th class="py-3.5 px-6 text-center">Status</th>
-                            <th class="py-3.5 px-6">Keterangan</th>
-                            <th class="py-3.5 px-6 text-right">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm">
-                        @forelse($units as $unit)
-                            <tr class="hover:bg-slate-50/50 transition-colors">
-                                <td class="py-4 px-6 font-mono font-bold text-indigo-600 text-xs">{{ $unit->code }}</td>
-                                <td class="py-4 px-6 font-semibold text-slate-900">{{ $unit->name }}</td>
-                                <td class="py-4 px-6 text-center">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200">
-                                        {{ $unit->barangs_count }} Barang
-                                    </span>
-                                </td>
-                                <td class="py-4 px-6 text-center">
-                                    @if($unit->status === 'active')
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                                            Aktif
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-500 border border-slate-200">
-                                            Nonaktif
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="py-4 px-6 text-slate-500 text-xs">{{ $unit->description ?? '-' }}</td>
-                                <td class="py-4 px-6 text-right">
-                                    <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('units.edit', $unit) }}" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit">
-                                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </a>
-                                        <x-modal-hapus name="{{ $unit->name }}" action="{{ route('units.destroy', $unit) }}" />
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="py-8 text-center text-slate-400">Belum ada data satuan barang.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+        <x-table>
+            <x-table.header>
+                <x-table.row>
+                    <x-table.head>Kode</x-table.head>
+                    <x-table.head>Nama Satuan</x-table.head>
+                    <x-table.head class="text-center">Total Barang</x-table.head>
+                    <x-table.head class="text-center">Status</x-table.head>
+                    <x-table.head>Keterangan</x-table.head>
+                    <x-table.head class="text-right">Aksi</x-table.head>
+                </x-table.row>
+            </x-table.header>
+            <x-table.body>
+                @forelse($units as $unit)
+                    <x-table.row>
+                        <x-table.cell class="font-mono font-bold text-indigo-600 text-xs">{{ $unit->code }}</x-table.cell>
+                        <x-table.cell class="font-semibold text-slate-900">{{ $unit->name }}</x-table.cell>
+                        <x-table.cell class="text-center">
+                            <x-badge variant="secondary">
+                                {{ $unit->barangs_count }} Barang
+                            </x-badge>
+                        </x-table.cell>
+                        <x-table.cell class="text-center">
+                            @if($unit->status === 'active')
+                                <x-badge variant="outline">Aktif</x-badge>
+                            @else
+                                <x-badge variant="secondary">Nonaktif</x-badge>
+                            @endif
+                        </x-table.cell>
+                        <x-table.cell class="text-slate-500 text-xs">{{ $unit->description ?? '-' }}</x-table.cell>
+                        <x-table.cell class="text-right">
+                            <div class="flex items-center justify-end space-x-2">
+                                <a href="{{ route('units.edit', $unit) }}" class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-md transition-colors border border-slate-300" title="Edit">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </a>
+                                <x-modal-hapus name="{{ $unit->name }}" action="{{ route('units.destroy', $unit) }}" />
+                            </div>
+                        </x-table.cell>
+                    </x-table.row>
+                @empty
+                    <x-table.row>
+                        <x-table.cell colspan="6" class="py-8 text-center text-slate-400">Belum ada data satuan barang.</x-table.cell>
+                    </x-table.row>
+                @endforelse
+            </x-table.body>
+        </x-table>
 
-            @if($units->hasPages())
-                <div class="px-6 py-4 border-t border-slate-100">
-                    {{ $units->links() }}
-                </div>
-            @endif
-        </div>
+        @if($units->hasPages())
+            <div class="px-6 py-4 bg-white rounded-lg border border-slate-300">
+                {{ $units->links() }}
+            </div>
+        @endif
+    </div>
     </div>
 </x-app-layout>

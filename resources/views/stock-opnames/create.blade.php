@@ -11,8 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+    <div class="w-full">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-slate-200/80 p-6">
                 <form action="{{ route('stock-opnames.store') }}" method="POST" class="space-y-6">
                     @csrf
@@ -52,26 +51,26 @@
                     <div class="space-y-4">
                         <h3 class="font-bold text-slate-800 text-base">Detail Perhitungan Fisik</h3>
                         
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto border border-slate-300 rounded-xl">
                             <table class="w-full text-left border-collapse" id="opname-table">
                                 <thead>
-                                    <tr class="bg-slate-50 text-xs font-bold uppercase text-slate-500 border-b">
-                                        <th class="p-3">Barang / Item</th>
-                                        <th class="p-3">Batch / Lot (Opsional)</th>
-                                        <th class="p-3">Stok Sistem</th>
-                                        <th class="p-3">Stok Fisik</th>
-                                        <th class="p-3">Catatan</th>
+                                    <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Barang / Item</th>
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Batch / Lot (Opsional)</th>
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Stok Sistem</th>
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Stok Fisik</th>
+                                        <th class="py-3.5 px-4">Catatan</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-100 text-sm">
+                                <tbody class="divide-y divide-slate-200 text-sm">
                                     @foreach($barangs as $index => $b)
-                                        <tr>
-                                            <td class="p-3">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="py-3.5 px-4 border-r border-slate-200">
                                                 <input type="hidden" name="items[{{ $index }}][barang_id]" value="{{ $b->id }}">
                                                 <span class="font-bold text-slate-800">{{ $b->nama_barang }}</span>
                                                 <span class="text-xs text-slate-400 block font-mono">{{ $b->kode_barang }}</span>
                                             </td>
-                                            <td class="p-3">
+                                            <td class="py-3.5 px-4 border-r border-slate-200">
                                                 <select name="items[{{ $index }}][batch_id]" class="w-full rounded-lg border-slate-300 text-xs">
                                                     <option value="">Semua Batch (Stok Total)</option>
                                                     @foreach($b->batches as $bt)
@@ -79,13 +78,13 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td class="p-3 font-semibold text-slate-600">
+                                            <td class="py-3.5 px-4 border-r border-slate-200 font-semibold text-slate-600">
                                                 {{ $b->stok }} {{ $b->satuan }}
                                             </td>
-                                            <td class="p-3">
+                                            <td class="py-3.5 px-4 border-r border-slate-200">
                                                 <input type="number" step="0.01" min="0" name="items[{{ $index }}][stok_fisik]" value="{{ $b->stok }}" required class="w-32 rounded-lg border-slate-300 text-sm font-semibold">
                                             </td>
-                                            <td class="p-3">
+                                            <td class="py-3.5 px-4">
                                                 <input type="text" name="items[{{ $index }}][catatan]" class="w-full rounded-lg border-slate-300 text-xs" placeholder="Kondisi kemasan / kemiringan">
                                             </td>
                                         </tr>

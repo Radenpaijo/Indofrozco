@@ -11,8 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="w-full">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl border border-slate-200/80 p-6">
                 <div class="mb-4 p-3 bg-amber-50 text-amber-800 border border-amber-200 rounded-xl text-xs">
                     <strong>Aturan BR-006:</strong> Setiap item penyesuaian stok <strong>WAJIB menyertakan Alasan (Reason)</strong> resmi yang valid (misal: Kerusakan kemasan, Hasil Opname, Barang Kadaluarsa).

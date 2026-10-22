@@ -21,7 +21,7 @@
                 <p class="text-xs text-slate-500 mt-2">Kategori: <span class="font-semibold text-slate-800">{{ $barang->category ? $barang->category->name : '-' }}</span></p>
                 <p class="text-xs text-slate-500">Satuan: <span class="font-semibold text-slate-800">{{ $barang->unit ? $barang->unit->name : $barang->satuan }}</span></p>
                 <p class="text-xs text-slate-500">Status Katalog: 
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold {{ $barang->is_active ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-500' }}">
+                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-300">
                         {{ $barang->is_active ? 'AKTIF' : 'NONAKTIF' }}
                     </span>
                 </p>
@@ -74,36 +74,36 @@
                 @if($expiringBatches->isEmpty())
                     <p class="text-slate-400 text-xs italic">Semua batch untuk barang ini dalam kondisi aman (tidak mendekati expiry limit).</p>
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto border border-slate-300 rounded-xl">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                                    <th class="px-4 py-3">No. Penerimaan</th>
-                                    <th class="px-4 py-3">No. Surat Jalan</th>
-                                    <th class="px-4 py-3">Tanggal Masuk</th>
-                                    <th class="px-4 py-3">Jumlah Masuk</th>
-                                    <th class="px-4 py-3">Tanggal Expired</th>
-                                    <th class="px-4 py-3">Hari Tersisa</th>
-                                    <th class="px-4 py-3">Status</th>
+                                <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                                    <th class="py-3.5 px-4 border-r border-slate-300">No. Penerimaan</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">No. Surat Jalan</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Tanggal Masuk</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Jumlah Masuk</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Tanggal Expired</th>
+                                    <th class="py-3.5 px-4 border-r border-slate-300">Hari Tersisa</th>
+                                    <th class="py-3.5 px-4">Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-slate-100">
+                            <tbody class="divide-y divide-slate-200">
                                 @foreach($expiringBatches as $batch)
-                                    <tr>
-                                        <td class="px-4 py-3 font-medium text-slate-900">{{ $batch->no_masuk }}</td>
-                                        <td class="px-4 py-3 text-slate-600">{{ $batch->no_surat_jalan ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-slate-600">{{ \Carbon\Carbon::parse($batch->tanggal)->format('d M Y') }}</td>
-                                        <td class="px-4 py-3 font-semibold text-slate-800">{{ $batch->jumlah }}</td>
-                                        <td class="px-4 py-3 text-slate-600">{{ $batch->expiry_date->format('d M Y') }}</td>
-                                        <td class="px-4 py-3 font-bold">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="py-3.5 px-4 border-r border-slate-200 font-medium text-slate-900">{{ $batch->no_masuk }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 text-slate-600">{{ $batch->no_surat_jalan ?? '-' }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 text-slate-600">{{ \Carbon\Carbon::parse($batch->tanggal)->format('d M Y') }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 font-semibold text-slate-800">{{ $batch->jumlah }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 text-slate-600">{{ $batch->expiry_date->format('d M Y') }}</td>
+                                        <td class="py-3.5 px-4 border-r border-slate-200 font-bold">
                                             @if($batch->days_left < 0)
                                                 <span class="text-rose-600">Expired (Terlewat {{ abs($batch->days_left) }} hari)</span>
                                             @else
                                                 <span class="text-amber-600">{{ $batch->days_left }} hari lagi</span>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-3">
-                                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold {{ $batch->status === 'expired' ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700' }}">
+                                        <td class="py-3.5 px-4">
+                                            <span class="px-2.5 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">
                                                 {{ strtoupper($batch->status) }}
                                             </span>
                                         </td>

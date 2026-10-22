@@ -15,7 +15,7 @@ class WarehouseTypeController extends Controller
             $pencarian = $permintaan->search;
             $query->where(function ($q) use ($pencarian) {
                 $q->where('name', 'like', "%{$pencarian}%")
-                  ->orWhere('code', 'like', "%{$pencarian}%");
+                    ->orWhere('code', 'like', "%{$pencarian}%");
             });
         }
 

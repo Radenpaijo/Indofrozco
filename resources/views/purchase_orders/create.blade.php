@@ -11,8 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+    <div class="w-full">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-8">
                 <form method="POST" action="{{ route('purchase-orders.store') }}" class="space-y-6" id="po-form">
                     @csrf
@@ -52,22 +51,22 @@
                         <h4 class="text-md font-bold text-slate-800 mb-2">Item Barang & Detail Harga</h4>
                         <p class="text-xs text-slate-400 mb-4">Masukkan kuantitas dan harga satuan penawaran dari supplier.</p>
 
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-slate-200" id="items-table">
+                        <div class="overflow-x-auto border border-slate-300 rounded-xl">
+                            <table class="w-full text-left border-collapse" id="items-table">
                                 <thead>
-                                    <tr class="bg-slate-50 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                        <th class="px-4 py-3">Barang</th>
-                                        <th class="px-4 py-3">Jumlah Pesan</th>
-                                        <th class="px-4 py-3">Harga Satuan (Rp)</th>
-                                        <th class="px-4 py-3">Subtotal (Rp)</th>
-                                        <th class="px-4 py-3 text-right">Aksi</th>
+                                    <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Barang</th>
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Jumlah Pesan</th>
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Harga Satuan (Rp)</th>
+                                        <th class="py-3.5 px-4 border-r border-slate-300">Subtotal (Rp)</th>
+                                        <th class="py-3.5 px-4 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-100 text-sm" id="items-tbody">
+                                <tbody class="divide-y divide-slate-200 text-sm" id="items-tbody">
                                     @if($linkedPR && $linkedPR->details->isNotEmpty())
                                         @foreach($linkedPR->details as $idx => $d)
-                                            <tr class="item-row">
-                                                <td class="px-4 py-3">
+                                            <tr class="item-row hover:bg-slate-50">
+                                                <td class="py-3.5 px-4 border-r border-slate-200">
                                                     <select name="items[{{ $idx }}][barang_id]" required class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                                         <option value="">-- Pilih Barang --</option>
                                                         @foreach($barangs as $barang)
@@ -77,23 +76,28 @@
                                                         @endforeach
                                                     </select>
                                                 </td>
-                                                <td class="px-4 py-3">
+                                                <td class="py-3.5 px-4 border-r border-slate-200">
                                                     <input type="number" name="items[{{ $idx }}][jumlah]" required min="1" value="{{ $d->jumlah }}" placeholder="Jumlah" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm input-qty">
                                                 </td>
-                                                <td class="px-4 py-3">
+                                                <td class="py-3.5 px-4 border-r border-slate-200">
                                                     <input type="number" name="items[{{ $idx }}][harga_satuan]" required min="0" placeholder="Harga Satuan" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm input-price">
                                                 </td>
-                                                <td class="px-4 py-3 font-semibold text-slate-700 row-subtotal">
+                                                <td class="py-3.5 px-4 border-r border-slate-200 font-semibold text-slate-700 row-subtotal">
                                                     Rp 0
                                                 </td>
-                                                <td class="px-4 py-3 text-right">
-                                                    <button type="button" class="text-rose-600 hover:text-rose-900 font-semibold text-xs remove-row-btn">Hapus</button>
+                                                <td class="py-3.5 px-4 text-center">
+                                                    <button type="button" class="inline-flex items-center px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:text-white hover:bg-rose-600 border border-rose-200 hover:border-rose-600 rounded-lg transition-all duration-150 shadow-sm remove-row-btn">
+                                                        <svg class="w-3.5 h-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                        Hapus
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @else
-                                        <tr class="item-row">
-                                            <td class="px-4 py-3">
+                                        <tr class="item-row hover:bg-slate-50">
+                                            <td class="py-3.5 px-4 border-r border-slate-200">
                                                 <select name="items[0][barang_id]" required class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                                     <option value="">-- Pilih Barang --</option>
                                                     @foreach($barangs as $barang)
@@ -103,17 +107,22 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td class="px-4 py-3">
+                                            <td class="py-3.5 px-4 border-r border-slate-200">
                                                 <input type="number" name="items[0][jumlah]" required min="1" placeholder="Jumlah" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm input-qty">
                                             </td>
-                                            <td class="px-4 py-3">
+                                            <td class="py-3.5 px-4 border-r border-slate-200">
                                                 <input type="number" name="items[0][harga_satuan]" required min="0" placeholder="Harga Satuan" class="w-full rounded-lg border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm input-price">
                                             </td>
-                                            <td class="px-4 py-3 font-semibold text-slate-700 row-subtotal">
+                                            <td class="py-3.5 px-4 border-r border-slate-200 font-semibold text-slate-700 row-subtotal">
                                                 Rp 0
                                             </td>
-                                            <td class="px-4 py-3 text-right">
-                                                <button type="button" class="text-rose-600 hover:text-rose-900 font-semibold text-xs remove-row-btn">Hapus</button>
+                                            <td class="py-3.5 px-4 text-center">
+                                                <button type="button" class="inline-flex items-center px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:text-white hover:bg-rose-600 border border-rose-200 hover:border-rose-600 rounded-lg transition-all duration-150 shadow-sm remove-row-btn">
+                                                    <svg class="w-3.5 h-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Hapus
+                                                </button>
                                             </td>
                                         </tr>
                                     @endif
@@ -126,7 +135,7 @@
                                 <svg class="h-3.5 w-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>
-                                [+] Tambah Item Barang
+                                Tambah Item Barang
                             </button>
                         </div>
                     </div>

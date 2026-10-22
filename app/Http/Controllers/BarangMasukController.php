@@ -26,12 +26,12 @@ class BarangMasukController extends Controller
         
         // Fetch active POs for receipt linking
         $activePOs = PurchaseOrder::whereIn('status', ['dikirim', 'diterima_sebagian'])
-            ->with(['supplier', 'details.barang'])
+            ->with(['supplier', 'details.barang.unit'])
             ->get();
 
         $selectedPO = null;
         if ($request->filled('po_id')) {
-            $selectedPO = PurchaseOrder::with(['supplier', 'details.barang'])->find($request->po_id);
+            $selectedPO = PurchaseOrder::with(['supplier', 'details.barang.unit'])->find($request->po_id);
             if ($selectedPO && !in_array($selectedPO->status, ['dikirim', 'diterima_sebagian'])) {
                 return redirect()->route('barang-masuk.create')->with('error', 'Purchase Order ini sudah selesai atau dibatalkan.');
             }
@@ -112,6 +112,9 @@ class BarangMasukController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('Gagal mencatat penerimaan barang: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
             return back()->withInput()->with('error', 'Gagal mencatat penerimaan barang: ' . $e->getMessage());
         }
     }

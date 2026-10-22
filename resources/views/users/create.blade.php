@@ -11,8 +11,7 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="w-full">
             <form action="{{ route('users.store') }}" method="POST" class="space-y-6">
                 @csrf
 

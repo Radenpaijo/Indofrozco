@@ -124,7 +124,11 @@ class PurchaseOrderController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Gagal membuat PO: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('PO Store Error: ' . $e->getMessage());
+            $errorMsg = str_contains($e->getMessage(), 'SQLSTATE')
+                ? 'Terjadi kendala pada sistem database saat menyimpan data.'
+                : $e->getMessage();
+            return back()->withInput()->with('error', 'Gagal membuat PO: ' . $errorMsg);
         }
     }
 

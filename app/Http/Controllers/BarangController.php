@@ -12,7 +12,7 @@ class BarangController extends Controller
 {
     public function index(Request $permintaan)
     {
-        $kueri = Barang::with(['category', 'unit', 'location.warehouse', 'warehouse']);
+        $kueri = Barang::with(['category', 'unit', 'location.warehouse']);
 
         if ($permintaan->filled('search')) {
             $pencarian = $permintaan->search;
@@ -33,11 +33,8 @@ class BarangController extends Controller
 
         if ($permintaan->filled('warehouse_id')) {
             $warehouseId = $permintaan->warehouse_id;
-            $kueri->where(function($q) use ($warehouseId) {
-                $q->where('warehouse_id', $warehouseId)
-                  ->orWhereHas('location', function($lq) use ($warehouseId) {
-                      $lq->where('warehouse_id', $warehouseId);
-                  });
+            $kueri->whereHas('location', function($lq) use ($warehouseId) {
+                $lq->where('warehouse_id', $warehouseId);
             });
         }
 
