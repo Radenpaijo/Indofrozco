@@ -14,7 +14,7 @@
     <div class="flex flex-col overflow-y-auto no-scrollbar flex-grow bg-slate-950" style="background-color: #161d27 !important;">
         <!-- Sidebar Navigation Header with Close Button for Mobile -->
         <div class="h-11 flex items-center justify-between px-4 bg-slate-900 border-b border-slate-800 shrink-0" style="background-color: #111720 !important;">
-            <span class="text-xs font-black tracking-wider uppercase text-slate-100">NAVIGATION</span>
+            <span class="text-xs font-bold tracking-wider uppercase text-slate-400">Navigasi</span>
             <button id="sidebar-close-btn" type="button" class="lg:hidden p-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded focus:outline-none transition-colors cursor-pointer touch-manipulation" title="Tutup Menu">
                 <svg class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -28,10 +28,10 @@
             <!-- DASHBOARD -->
             <a href="{{ route('dashboard') }}" 
                 style="{{ request()->routeIs('dashboard') ? 'background-color: #1c2635 !important;' : '' }}"
-                class="flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded transition-all duration-150 group 
-                {{ request()->routeIs('dashboard') ? 'text-sky-400 font-semibold border border-slate-700' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
+                class="flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-lg transition-colors group 
+                {{ request()->routeIs('dashboard') ? 'text-white font-semibold border border-slate-700/80 bg-slate-800/60' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
                 <div class="flex items-center space-x-3">
-                    <svg class="h-4 w-4 flex-shrink-0 {{ request()->routeIs('dashboard') ? 'text-sky-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-4 w-4 flex-shrink-0 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     <span>Dashboard</span>
@@ -45,73 +45,66 @@
                     <button type="button" 
                         onclick="toggleNavAccordion(this)"
                         style="{{ $masterActive ? 'background-color: #1c2635 !important;' : '' }}"
-                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded transition-all duration-150 group cursor-pointer select-none 
-                        {{ $masterActive ? 'text-sky-400 font-semibold border border-slate-600 shadow-inner' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
+                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-lg transition-colors group cursor-pointer select-none 
+                        {{ $masterActive ? 'text-white font-semibold border border-slate-700/80 shadow-xs' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
                         <div class="flex items-center space-x-3">
-                            <svg class="h-4 w-4 flex-shrink-0 {{ $masterActive ? 'text-sky-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-4 w-4 flex-shrink-0 {{ $masterActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                             </svg>
                             <span>Master Data</span>
                         </div>
-                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $masterActive ? 'rotate-180 text-sky-400' : 'text-sky-500 group-hover:text-sky-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $masterActive ? 'rotate-180 text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
-                    <!-- Submenu Items with » bullet prefix -->
-                    <div class="accordion-content space-y-1 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $masterActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
+                    <!-- Submenu Items -->
+                    <div class="accordion-content space-y-0.5 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $masterActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
                         @if(auth()->user()->hasPermission('barangs'))
-                            <a href="{{ route('barangs.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('barangs.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('barangs.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('barangs.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Daftar Barang
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('categories'))
-                            <a href="{{ route('categories.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('categories.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('categories.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('categories.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Kategori Barang
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('units'))
-                            <a href="{{ route('units.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('units.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('units.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('units.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Satuan
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('suppliers'))
-                            <a href="{{ route('suppliers.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('suppliers.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('suppliers.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('suppliers.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Supplier
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('warehouses'))
-                            <a href="{{ route('warehouses.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('warehouses.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('warehouses.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('warehouses.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Daftar Gudang
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('warehouse_types'))
-                            <a href="{{ route('warehouse-types.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('warehouse-types.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('warehouse-types.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('warehouse-types.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Jenis Gudang
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('locations'))
-                            <a href="{{ route('locations.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('locations.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('locations.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('locations.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Lokasi Rak
                             </a>
                         @endif
@@ -125,32 +118,30 @@
                     <button type="button" 
                         onclick="toggleNavAccordion(this)"
                         style="{{ $procurementActive ? 'background-color: #1c2635 !important;' : '' }}"
-                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded transition-all duration-150 group cursor-pointer select-none 
-                        {{ $procurementActive ? 'text-sky-400 font-semibold border border-slate-600 shadow-inner' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
+                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-lg transition-colors group cursor-pointer select-none 
+                        {{ $procurementActive ? 'text-white font-semibold border border-slate-700/80 shadow-xs' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
                         <div class="flex items-center space-x-3">
-                            <svg class="h-4 w-4 flex-shrink-0 {{ $procurementActive ? 'text-sky-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-4 w-4 flex-shrink-0 {{ $procurementActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                             </svg>
                             <span>Pembelian</span>
                         </div>
-                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $procurementActive ? 'rotate-180 text-sky-400' : 'text-sky-500 group-hover:text-sky-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $procurementActive ? 'rotate-180 text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
-                    <div class="accordion-content space-y-1 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $procurementActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
+                    <div class="accordion-content space-y-0.5 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $procurementActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
                         @if(auth()->user()->hasPermission('permintaan_pembelian'))
-                            <a href="{{ route('permintaan-pembelian.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('permintaan-pembelian.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('permintaan-pembelian.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('permintaan-pembelian.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Pengajuan Beli (PR)
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('purchase_orders'))
-                            <a href="{{ route('purchase-orders.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('purchase-orders.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('purchase-orders.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('purchase-orders.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Pesanan Pembelian (PO)
                             </a>
                         @endif
@@ -164,64 +155,58 @@
                     <button type="button" 
                         onclick="toggleNavAccordion(this)"
                         style="{{ $operasiActive ? 'background-color: #1c2635 !important;' : '' }}"
-                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded transition-all duration-150 group cursor-pointer select-none 
-                        {{ $operasiActive ? 'text-sky-400 font-semibold border border-slate-600 shadow-inner' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
+                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-lg transition-colors group cursor-pointer select-none 
+                        {{ $operasiActive ? 'text-white font-semibold border border-slate-700/80 shadow-xs' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
                         <div class="flex items-center space-x-3">
-                            <svg class="h-4 w-4 flex-shrink-0 {{ $operasiActive ? 'text-sky-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-4 w-4 flex-shrink-0 {{ $operasiActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                             <span>Gudang</span>
                         </div>
-                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $operasiActive ? 'rotate-180 text-sky-400' : 'text-sky-500 group-hover:text-sky-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $operasiActive ? 'rotate-180 text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
-                    <div class="accordion-content space-y-1 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $operasiActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
+                    <div class="accordion-content space-y-0.5 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $operasiActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
                         @if(auth()->user()->hasPermission('barang_masuk'))
-                            <a href="{{ route('barang-masuk.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('barang-masuk.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('barang-masuk.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('barang-masuk.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Barang Masuk
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('barang_keluar'))
-                            <a href="{{ route('barang-keluar.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('barang-keluar.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('barang-keluar.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('barang-keluar.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Barang Keluar
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('permintaan_barang'))
-                            <a href="{{ route('permintaan-barang.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('permintaan-barang.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('permintaan-barang.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('permintaan-barang.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Permintaan Barang
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('stock_opnames'))
-                            <a href="{{ route('stock-opnames.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('stock-opnames.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('stock-opnames.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('stock-opnames.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Cek Fisik Stok (Opname)
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('stock_adjustments'))
-                            <a href="{{ route('stock-adjustments.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('stock-adjustments.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('stock-adjustments.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('stock-adjustments.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Penyesuaian Stok
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('stock_mutations'))
-                            <a href="{{ route('stock-mutations.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('stock-mutations.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('stock-mutations.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('stock-mutations.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Pindah Rak / Lokasi
                             </a>
                         @endif
@@ -235,32 +220,30 @@
                     <button type="button" 
                         onclick="toggleNavAccordion(this)"
                         style="{{ $laporanActive ? 'background-color: #1c2635 !important;' : '' }}"
-                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded transition-all duration-150 group cursor-pointer select-none 
-                        {{ $laporanActive ? 'text-sky-400 font-semibold border border-slate-600 shadow-inner' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
+                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-lg transition-colors group cursor-pointer select-none 
+                        {{ $laporanActive ? 'text-white font-semibold border border-slate-700/80 shadow-xs' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
                         <div class="flex items-center space-x-3">
-                            <svg class="h-4 w-4 flex-shrink-0 {{ $laporanActive ? 'text-sky-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-4 w-4 flex-shrink-0 {{ $laporanActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <span>Laporan</span>
                         </div>
-                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $laporanActive ? 'rotate-180 text-sky-400' : 'text-sky-500 group-hover:text-sky-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $laporanActive ? 'rotate-180 text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
-                    <div class="accordion-content space-y-1 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $laporanActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
+                    <div class="accordion-content space-y-0.5 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $laporanActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
                         @if(auth()->user()->hasPermission('reports'))
-                            <a href="{{ route('reports.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('reports.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('reports.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('reports.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Laporan Gudang & Stok
                             </a>
                         @endif
 
                         @if(auth()->user()->hasPermission('audit_logs'))
-                            <a href="{{ route('audit-logs.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                                {{ request()->routeIs('audit-logs.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                                <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                            <a href="{{ route('audit-logs.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                                {{ request()->routeIs('audit-logs.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                                 Riwayat Aktivitas
                             </a>
                         @endif
@@ -274,23 +257,22 @@
                     <button type="button" 
                         onclick="toggleNavAccordion(this)"
                         style="{{ $sistemActive ? 'background-color: #1c2635 !important;' : '' }}"
-                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded transition-all duration-150 group cursor-pointer select-none 
-                        {{ $sistemActive ? 'text-sky-400 font-semibold border border-slate-600 shadow-inner' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
+                        class="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium rounded-lg transition-colors group cursor-pointer select-none 
+                        {{ $sistemActive ? 'text-white font-semibold border border-slate-700/80 shadow-xs' : 'text-slate-300 hover:bg-slate-900 hover:text-white border border-transparent' }}">
                         <div class="flex items-center space-x-3">
-                            <svg class="h-4 w-4 flex-shrink-0 {{ $sistemActive ? 'text-sky-400' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-4 w-4 flex-shrink-0 {{ $sistemActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                             </svg>
                             <span>Pengaturan</span>
                         </div>
-                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $sistemActive ? 'rotate-180 text-sky-400' : 'text-sky-500 group-hover:text-sky-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="accordion-chevron h-3.5 w-3.5 transform transition-transform duration-200 {{ $sistemActive ? 'rotate-180 text-white' : 'text-slate-400 group-hover:text-slate-200' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
 
-                    <div class="accordion-content space-y-1 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $sistemActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
-                        <a href="{{ route('users.index') }}" class="flex items-center pl-7 pr-3 py-2 text-xs font-normal transition-all duration-150 group 
-                            {{ request()->routeIs('users.*') ? 'text-sky-400 font-semibold' : 'text-slate-400 hover:text-slate-200' }}">
-                            <span class="mr-2 text-sky-400 font-bold text-[11px]">&raquo;</span>
+                    <div class="accordion-content space-y-0.5 pt-0.5 pb-1 transition-all duration-200 bg-slate-950 rounded-md {{ $sistemActive ? '' : 'hidden' }}" style="background-color: #121922 !important;">
+                        <a href="{{ route('users.index') }}" class="flex items-center pl-9 pr-3 py-2 text-xs transition-colors rounded-md 
+                            {{ request()->routeIs('users.*') ? 'text-white font-medium bg-slate-800/60' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' }}">
                             Kelola Pengguna
                         </a>
                     </div>

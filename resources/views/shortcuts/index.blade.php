@@ -27,12 +27,9 @@
             
             <!-- Header Card -->
             <div class="px-4 sm:px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between select-none">
-                <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
-                    <h3 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
-                        Pintasan Keyboard &amp; Aksi Cepat
-                    </h3>
-                </div>
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
+                    Pintasan Keyboard &amp; Aksi Cepat
+                </h3>
                 <span class="text-xs font-medium text-slate-500 hidden sm:inline">
                     Tekan <kbd class="px-1.5 py-0.5 text-[11px] font-mono font-bold bg-white text-slate-700 border border-slate-300 rounded shadow-2xs">Esc</kbd> untuk kembali
                 </span>
@@ -44,11 +41,8 @@
                     
                     <!-- KOLOM 1: FORMULIR & INPUT DATA -->
                     <div class="space-y-1">
-                        <div class="flex items-center gap-2 pb-2 mb-2 border-b border-slate-200">
-                            <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Formulir &amp; Input Data</span>
+                        <div class="pb-2 mb-2 border-b border-slate-200">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Formulir &amp; Input Data</span>
                         </div>
 
                         <!-- 1. Simpan Formulir -->
@@ -125,11 +119,8 @@
                         
                         <!-- Section: Tabel Transaksi & Baris -->
                         <div class="space-y-1">
-                            <div class="flex items-center gap-2 pb-2 mb-2 border-b border-slate-200">
-                                <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                </svg>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Tabel Transaksi &amp; Baris</span>
+                            <div class="pb-2 mb-2 border-b border-slate-200">
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Tabel Transaksi &amp; Baris</span>
                             </div>
 
                             <!-- Tambah Baris Alt + A -->
@@ -178,12 +169,8 @@
 
                         <!-- Section: Navigasi & Sistem -->
                         <div class="space-y-1">
-                            <div class="flex items-center gap-2 pb-2 mb-2 border-b border-slate-200">
-                                <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Navigasi &amp; Sistem</span>
+                            <div class="pb-2 mb-2 border-b border-slate-200">
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Navigasi &amp; Sistem</span>
                             </div>
 
                             <!-- Pintasan Keyboard ? -->
@@ -226,11 +213,8 @@
                 </span>
                 <button type="button" 
                         onclick="handleOkeClick()" 
-                        class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition cursor-pointer">
-                    <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>OKE (Selesai)</span>
+                        class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition cursor-pointer">
+                    <span>Selesai</span>
                 </button>
             </div>
 

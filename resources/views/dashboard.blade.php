@@ -9,63 +9,31 @@
     </x-slot>
 
     <div class="space-y-5">
-        <!-- Ringkasan Utama -->
+        <!-- Ringkasan Utama (Clean & Minimalist Enterprise) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-medium text-slate-500">Total Jenis Barang</span>
-                    <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                    </span>
-                </div>
-                <p class="text-2xl font-bold text-slate-900 mt-1">{{ number_format($totalItems) }}</p>
+                <span class="text-xs font-medium text-slate-500">Total Jenis Barang</span>
+                <p class="text-2xl font-bold text-slate-900 mt-1.5">{{ number_format($totalItems) }}</p>
                 <p class="text-xs text-slate-500 mt-1.5">Total stok fisik: <span class="font-semibold text-slate-700">{{ number_format($totalStockQty) }}</span></p>
             </div>
 
             <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-medium text-slate-500">Stok Perlu Restock</span>
-                    <span class="w-8 h-8 rounded-lg {{ $lowStockCount > 0 ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-600' }} flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            @if($lowStockCount > 0)
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            @else
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                            @endif
-                        </svg>
-                    </span>
-                </div>
-                <p class="text-2xl font-bold {{ $lowStockCount > 0 ? 'text-rose-600' : 'text-slate-900' }} mt-1">{{ number_format($lowStockCount) }}</p>
-                <p class="text-xs mt-1.5 {{ $lowStockCount > 0 ? 'text-rose-600 font-medium' : 'text-emerald-600 font-medium' }}">
+                <span class="text-xs font-medium text-slate-500">Stok Perlu Restock</span>
+                <p class="text-2xl font-bold {{ $lowStockCount > 0 ? 'text-rose-600' : 'text-slate-900' }} mt-1.5">{{ number_format($lowStockCount) }}</p>
+                <p class="text-xs mt-1.5 {{ $lowStockCount > 0 ? 'text-rose-600 font-medium' : 'text-slate-500' }}">
                     {{ $lowStockCount > 0 ? 'Di bawah batas minimum' : 'Semua stok aman' }}
                 </p>
             </div>
 
             <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-medium text-slate-500">Barang Masuk (30 Hari)</span>
-                    <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                        </svg>
-                    </span>
-                </div>
-                <p class="text-2xl font-bold text-slate-900 mt-1">{{ number_format($incoming30dQty) }}</p>
+                <span class="text-xs font-medium text-slate-500">Barang Masuk (30 Hari)</span>
+                <p class="text-2xl font-bold text-slate-900 mt-1.5">{{ number_format($incoming30dQty) }}</p>
                 <p class="text-xs text-slate-500 mt-1.5">{{ number_format($incoming30dCount) }} transaksi masuk</p>
             </div>
 
             <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-medium text-slate-500">Barang Keluar (30 Hari)</span>
-                    <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                        </svg>
-                    </span>
-                </div>
-                <p class="text-2xl font-bold text-slate-900 mt-1">{{ number_format($outgoing30dQty) }}</p>
+                <span class="text-xs font-medium text-slate-500">Barang Keluar (30 Hari)</span>
+                <p class="text-2xl font-bold text-slate-900 mt-1.5">{{ number_format($outgoing30dQty) }}</p>
                 <p class="text-xs text-slate-500 mt-1.5">{{ number_format($outgoing30dCount) }} transaksi keluar</p>
             </div>
         </div>
@@ -76,7 +44,7 @@
                 <div class="px-4 sm:px-5 py-3.5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
                         <h3 class="font-semibold text-slate-800 text-sm">Keuangan & Selisih Persediaan</h3>
-                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        <span class="hidden sm:inline-block px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
                             Dibayar &minus; Keluar &minus; Rusak/Susut
                         </span>
                     </div>
@@ -104,7 +72,7 @@
                             <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="text-xs font-medium text-slate-500">Total Dibayar (PO)</span>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">{{ number_format($fin['po_count']) }} PO</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-600 border border-slate-200">{{ number_format($fin['po_count']) }} PO</span>
                                 </div>
                                 <p class="text-lg sm:text-xl font-bold text-slate-900 font-mono mt-1.5 break-words">
                                     Rp {{ number_format($fin['total_paid'], 0, ',', '.') }}
@@ -115,18 +83,18 @@
                             <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="text-xs font-medium text-slate-500">Nilai Dikeluarkan</span>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">{{ number_format($fin['issued_qty'], 0, ',', '.') }} unit</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-600 border border-slate-200">{{ number_format($fin['issued_qty'], 0, ',', '.') }} unit</span>
                                 </div>
-                                <p class="text-lg sm:text-xl font-bold text-emerald-700 font-mono mt-1.5 break-words">
+                                <p class="text-lg sm:text-xl font-bold text-slate-900 font-mono mt-1.5 break-words">
                                     Rp {{ number_format($fin['issued_value'], 0, ',', '.') }}
                                 </p>
                             </div>
 
                             <!-- 3. Kerugian Rusak / Hilang / Susut -->
-                            <div class="rounded-xl border {{ $fin['total_loss_value'] > 0 ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-slate-50/50' }} p-4">
+                            <div class="rounded-xl border {{ $fin['total_loss_value'] > 0 ? 'border-rose-200 bg-rose-50/30' : 'border-slate-200 bg-slate-50/50' }} p-4">
                                 <div class="flex items-center justify-between gap-2">
                                     <span class="text-xs font-medium {{ $fin['total_loss_value'] > 0 ? 'text-rose-700' : 'text-slate-500' }}">Rusak / Hilang / Susut</span>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold {{ $fin['total_loss_value'] > 0 ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-600 border border-slate-200' }}">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold {{ $fin['total_loss_value'] > 0 ? 'bg-white text-rose-700 border border-rose-200' : 'bg-white text-slate-600 border border-slate-200' }}">
                                         {{ number_format($fin['loss_percent'], 2, ',', '.') }}%
                                     </span>
                                 </div>
@@ -141,15 +109,15 @@
                             </div>
 
                             <!-- 4. Selisih Bersih -->
-                            <div class="rounded-xl border border-indigo-200 bg-indigo-50/40 p-4">
+                            <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
                                 <div class="flex items-center justify-between gap-2">
-                                    <span class="text-xs font-semibold text-indigo-700">Selisih Sisa Nilai</span>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-indigo-700 border border-indigo-200">Netto</span>
+                                    <span class="text-xs font-semibold text-slate-700">Selisih Sisa Nilai</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white text-slate-600 border border-slate-200">Netto</span>
                                 </div>
-                                <p class="text-lg sm:text-xl font-bold {{ $fin['net_variance'] < 0 ? 'text-rose-600' : 'text-indigo-700' }} font-mono mt-1.5 break-words">
+                                <p class="text-lg sm:text-xl font-bold {{ $fin['net_variance'] < 0 ? 'text-rose-600' : 'text-slate-900' }} font-mono mt-1.5 break-words">
                                     Rp {{ number_format($fin['net_variance'], 0, ',', '.') }}
                                 </p>
-                                <p class="text-[11px] text-slate-500 mt-2 pt-2 border-t border-indigo-100">
+                                <p class="text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-200">
                                     Nilai stok fisik saat ini: <strong class="text-slate-800 font-mono">Rp {{ number_format($financeCurrentStockValue, 0, ',', '.') }}</strong>
                                 </p>
                             </div>
@@ -196,11 +164,11 @@
                                             <div class="text-[11px] text-slate-400 font-mono">{{ $b->kode_barang }}</div>
                                         </div>
                                         @if($isHabis)
-                                            <span class="shrink-0 inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200">Habis</span>
+                                            <span class="shrink-0 inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">Habis</span>
                                         @elseif($isMenipis)
-                                            <span class="shrink-0 inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">Menipis</span>
+                                            <span class="shrink-0 inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">Menipis</span>
                                         @else
-                                            <span class="shrink-0 inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Aman</span>
+                                            <span class="shrink-0 inline-block px-2 py-0.5 rounded text-[11px] font-medium text-slate-500 bg-slate-100">Aman</span>
                                         @endif
                                     </div>
                                     <div class="flex items-center justify-between pt-1.5 border-t border-slate-200/60 text-[11px]">
@@ -253,11 +221,11 @@
                                             </td>
                                             <td class="py-2.5 pl-3 text-right whitespace-nowrap">
                                                 @if($isHabis)
-                                                    <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200">Habis</span>
+                                                    <span class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">Habis</span>
                                                 @elseif($isMenipis)
-                                                    <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">Menipis</span>
+                                                    <span class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">Menipis</span>
                                                 @else
-                                                    <span class="inline-block px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">Aman</span>
+                                                    <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium text-slate-500 bg-slate-100">Aman</span>
                                                 @endif
                                             </td>
                                         </tr>
@@ -342,21 +310,21 @@
                     <div class="divide-y divide-slate-100 px-5">
                         <a href="{{ route('permintaan-barang.index') }}" class="py-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/70 -mx-5 px-5 transition">
                             <span class="text-xs font-medium text-slate-700">Permintaan Barang Produksi</span>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $pendingProdRequests > 0 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-slate-100 text-slate-600' }}">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $pendingProdRequests > 0 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500' }}">
                                 {{ $pendingProdRequests }}
                             </span>
                         </a>
 
                         <a href="{{ route('permintaan-barang.index') }}" class="py-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/70 -mx-5 px-5 transition">
                             <span class="text-xs font-medium text-slate-700">Cek QC Defrost</span>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $pendingDefrostCount > 0 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-slate-100 text-slate-600' }}">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $pendingDefrostCount > 0 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500' }}">
                                 {{ $pendingDefrostCount }}
                             </span>
                         </a>
 
                         <a href="{{ route('permintaan-pembelian.index') }}" class="py-3.5 flex items-center justify-between gap-3 hover:bg-slate-50/70 -mx-5 px-5 transition">
                             <span class="text-xs font-medium text-slate-700">Permintaan Pembelian (PR)</span>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $pendingPRs > 0 ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-slate-100 text-slate-600' }}">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $pendingPRs > 0 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500' }}">
                                 {{ $pendingPRs }}
                             </span>
                         </a>
@@ -368,7 +336,7 @@
                                     <span class="text-[11px] text-slate-400 ml-1">&bull; Rp {{ number_format($activePOValue, 0, ',', '.') }}</span>
                                 @endif
                             </div>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $activePOs > 0 ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-slate-100 text-slate-600' }}">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $activePOs > 0 ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-500' }}">
                                 {{ $activePOs }}
                             </span>
                         </a>
@@ -634,7 +602,7 @@
                         {
                             label: 'Barang Masuk',
                             data: trendInbound,
-                            backgroundColor: '#4f46e5',
+                            backgroundColor: '#334155',
                             borderRadius: 4,
                             barPercentage: 0.7,
                             categoryPercentage: 0.65,

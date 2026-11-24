@@ -154,8 +154,8 @@
                     class="group flex items-center sm:space-x-2 p-0.5 sm:py-1.5 sm:px-2.5 rounded-full sm:rounded-xl hover:bg-slate-800/80 sm:border sm:border-slate-700/60 transition-all duration-150 focus:outline-none cursor-pointer"
                     aria-label="Menu Profil">
                     <!-- Avatar Icon (Circular on Mobile) -->
-                    <div class="h-8 w-8 sm:hidden rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-sm shrink-0 ring-2 ring-indigo-500/30">
-                        <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="h-8 w-8 sm:hidden rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 shadow-sm shrink-0">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </div>
