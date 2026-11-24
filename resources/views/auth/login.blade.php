@@ -30,7 +30,7 @@
 
         <!-- Email Address -->
         <div>
-            <label for="email" class="block font-semibold text-xs text-slate-300 uppercase tracking-wider mb-2">Email Address</label>
+            <label for="email" class="block font-semibold text-xs text-slate-300 uppercase tracking-wider mb-2">Email Address <span class="text-rose-500 font-bold ml-1">*</span></label>
             <div class="relative">
                 <div style="position: absolute; left: 0.875rem; top: 0; bottom: 0; display: flex; items-center: center; pointer-events: none;" class="flex items-center {{ $errors->has('email') ? 'text-red-400' : 'text-slate-500' }}">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,7 +47,7 @@
         <!-- Password -->
         <div>
             <div class="mb-2">
-                <label for="password" class="block font-semibold text-xs text-slate-300 uppercase tracking-wider">Password</label>
+                <label for="password" class="block font-semibold text-xs text-slate-300 uppercase tracking-wider">Password <span class="text-rose-500 font-bold ml-1">*</span></label>
             </div>
             <div class="relative">
                 <div style="position: absolute; left: 0.875rem; top: 0; bottom: 0; display: flex; items-center: center; pointer-events: none;" class="flex items-center {{ $errors->has('password') ? 'text-red-400' : 'text-slate-500' }}">

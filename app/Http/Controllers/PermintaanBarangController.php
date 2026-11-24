@@ -12,19 +12,40 @@ use Exception;
 
 class PermintaanBarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $query = PermintaanBarang::with(['user', 'details.barang']);
+        $query = PermintaanBarang::with(['user', 'details.barang', 'qcInspection']);
 
         // Staf Produksi can only see their own requests
         if ($user->role === 'produksi') {
             $query->where('user_id', $user->id);
         }
 
-        $permintaans = $query->orderBy('created_at', 'desc')->paginate(10);
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('no_permintaan', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
 
-        return view('permintaan_barang.index', compact('permintaans'));
+        $counts = [
+            'semua' => (clone $query)->count(),
+            'pending' => (clone $query)->where('status', 'pending')->count(),
+            'selesai' => (clone $query)->where('status', 'selesai')->count(),
+            'ditolak' => (clone $query)->where('status', 'ditolak')->count(),
+        ];
+
+        if ($request->filled('status') && in_array($request->status, ['pending', 'selesai', 'ditolak'])) {
+            $query->where('status', $request->status);
+        }
+
+        $permintaans = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('permintaan_barang.index', compact('permintaans', 'counts'));
     }
 
     public function create()
@@ -83,8 +104,111 @@ class PermintaanBarangController extends Controller
 
     public function show(PermintaanBarang $permintaan)
     {
-        $permintaan->load(['user', 'details.barang', 'barangKeluars.barang']);
+        $permintaan->load([
+            'user',
+            'details.barang.unit',
+            'details.barang.location.warehouse',
+            'details.barang.batches' => function ($q) {
+                $q->where('stok', '>', 0)
+                  ->where('status', 'active')
+                  ->orderByRaw('COALESCE(tanggal_kadaluarsa, "9999-12-31") ASC')
+                  ->orderBy('tanggal_masuk', 'asc')
+                  ->orderBy('id', 'asc');
+            },
+            'barangKeluars.barang',
+            'barangKeluars.inventoryTransactions.batch',
+            'barangKeluars.user',
+            'qcInspection.user',
+        ]);
+
         return view('permintaan_barang.show', compact('permintaan'));
+    }
+
+    public function print(PermintaanBarang $permintaan)
+    {
+        $permintaan->load([
+            'user',
+            'details.barang.unit',
+            'details.barang.location.warehouse',
+            'details.barang.batches' => function ($q) {
+                $q->where('stok', '>', 0)
+                  ->where('status', 'active')
+                  ->orderByRaw('COALESCE(tanggal_kadaluarsa, "9999-12-31") ASC')
+                  ->orderBy('tanggal_masuk', 'asc')
+                  ->orderBy('id', 'asc');
+            },
+            'barangKeluars.barang',
+            'barangKeluars.inventoryTransactions.batch',
+            'barangKeluars.user',
+            'qcInspection.user',
+        ]);
+
+        return view('permintaan_barang.print', compact('permintaan'));
+    }
+
+    public function verifyQc(Request $request, PermintaanBarang $permintaan)
+    {
+        $request->validate([
+            'berat_riil_diterima' => 'required|numeric|min:0.01',
+            'suhu' => 'required|numeric',
+            'status_qc' => 'required|in:pass,fail',
+            'tindakan_koreksi' => 'nullable|string|max:255',
+            'catatan' => 'nullable|string|max:255',
+        ]);
+
+        $beratKeluar = (float) $permintaan->barangKeluars->sum('jumlah');
+        $beratRiil = (float) $request->berat_riil_diterima;
+        $susutKg = max(0, $beratKeluar - $beratRiil);
+        $susutPersen = $beratKeluar > 0 ? ($susutKg / $beratKeluar) * 100 : 0;
+
+        // Buat atau perbarui catatan QC Defrost
+        \App\Models\QcInspection::updateOrCreate(
+            [
+                'reference_type' => PermintaanBarang::class,
+                'reference_id' => $permintaan->id,
+            ],
+            [
+                'user_id' => auth()->id(),
+                'tipe_qc' => 'production_defrost',
+                'nomor_dokumen' => 'FRM.JFD.01.10',
+                'tanggal_cek' => now()->toDateString(),
+                'jam_cek' => now()->format('H:i:s'),
+                'kondisi_aroma' => $request->boolean('kondisi_aroma', true),
+                'kondisi_tekstur' => $request->boolean('kondisi_tekstur', true),
+                'kondisi_penampakan' => $request->boolean('kondisi_penampakan', true),
+                'suhu' => $request->suhu,
+                'berat_keluar_gudang' => $beratKeluar,
+                'berat_riil_diterima' => $beratRiil,
+                'susut_kg' => round($susutKg, 2),
+                'susut_persen' => round($susutPersen, 2),
+                'status_qc' => $request->status_qc,
+                'tindakan_koreksi' => $request->tindakan_koreksi,
+                'catatan' => $request->catatan,
+            ]
+        );
+
+        $permintaan->update([
+            'status_qc' => $request->status_qc,
+        ]);
+
+        \App\Models\AuditLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'QC_DEFROST_VERIFICATION',
+            'module' => 'PRODUKSI',
+            'record_id' => $permintaan->id,
+            'new_values' => [
+                'no_permintaan' => $permintaan->no_permintaan,
+                'berat_keluar' => $beratKeluar,
+                'berat_riil' => $beratRiil,
+                'susut_kg' => round($susutKg, 2),
+                'susut_persen' => round($susutPersen, 2),
+                'status_qc' => $request->status_qc,
+            ],
+            'ip_address' => request()->ip(),
+        ]);
+
+        return redirect()->route('permintaan-barang.show', $permintaan->id)
+            ->with('success', 'Verifikasi QC Defrost & susut berat (FRM.JFD.01.10) berhasil disimpan!');
     }
 
     public function approve(Request $request, PermintaanBarang $permintaan)

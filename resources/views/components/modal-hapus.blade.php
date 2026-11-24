@@ -3,7 +3,7 @@
     'action' => null,
 ])
 
-<div x-data="{ open: false }">
+<div x-data="{ open: false }" class="inline-flex items-center">
     {{-- Tombol Hapus --}}
     <x-delete-button @click="open = true"></x-delete-button>
 

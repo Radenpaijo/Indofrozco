@@ -1,12 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-4 min-w-0">
-            <x-back-button />
-            <div class="min-w-0">
-                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                    {{ __('Detail Barang: ') }} {{ $barang->nama_barang }}
-                </h2>
-                <p class="text-xs text-slate-500 mt-1">Kode: <span class="font-mono font-bold text-indigo-600">{{ $barang->kode_barang }}</span></p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                <x-back-button :href="route('barangs.index')" />
+                <div class="min-w-0">
+                    <h2 class="font-bold text-xl sm:text-2xl text-slate-800 leading-tight truncate">
+                        {{ __('Detail Barang: ') }} {{ $barang->nama_barang }}
+                    </h2>
+                    <p class="text-xs text-slate-500">Kode: <span class="font-mono font-bold text-indigo-600">{{ $barang->kode_barang }}</span></p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 self-start sm:self-center">
+                <a href="{{ route('barangs.stock-card', $barang->id) }}">
+                    <x-button variant="outline" class="text-xs px-3.5 py-2 font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border-blue-300 shadow-sm">
+                        <svg class="h-4 w-4 mr-1.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Kartu Stok Fisik (Blue Card)
+                    </x-button>
+                </a>
             </div>
         </div>
     </x-slot>
@@ -36,8 +48,12 @@
                 <p class="text-xs text-slate-500">Stok Minimum: <span class="font-semibold text-slate-800">{{ $barang->stok_minimum }} {{ $barang->satuan }}</span></p>
                 <p class="text-xs text-slate-500">Lokasi / Rak: 
                     @if($barang->location)
-                        <span class="font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                            {{ $barang->location->code }} - {{ $barang->location->name }}
+                        <span class="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                            {{ $barang->location->code }} &bull; {{ $barang->location->name }} ({{ $barang->location->warehouse->name ?? 'Gudang' }})
+                        </span>
+                    @elseif($barang->kode_rak)
+                        <span class="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                            {{ $barang->kode_rak }} ({{ $barang->lokasi_gudang ?? 'Gudang' }})
                         </span>
                     @else
                         <span class="text-slate-400 italic">Belum ditentukan</span>
@@ -74,7 +90,45 @@
                 @if($expiringBatches->isEmpty())
                     <p class="text-slate-400 text-xs italic">Semua batch untuk barang ini dalam kondisi aman (tidak mendekati expiry limit).</p>
                 @else
-                    <div class="overflow-x-auto border border-slate-300 rounded-xl">
+                    <div class="md:hidden space-y-3">
+                        @foreach($expiringBatches as $batch)
+                            <div class="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2 text-xs">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <div class="font-bold text-slate-900 font-mono">{{ $batch->no_masuk }}</div>
+                                        <div class="text-[11px] text-slate-500">SJ: {{ $batch->no_surat_jalan ?? '-' }}</div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-300 shrink-0">
+                                        {{ strtoupper($batch->status) }}
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/70">
+                                    <div>
+                                        <span class="text-[10px] text-slate-400 uppercase block">Tgl Masuk</span>
+                                        <span class="font-medium text-slate-700">{{ \Carbon\Carbon::parse($batch->tanggal)->format('d M Y') }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-slate-400 uppercase block">Jumlah Masuk</span>
+                                        <span class="font-bold text-slate-800">{{ $batch->jumlah }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-slate-400 uppercase block">Tgl Expired</span>
+                                        <span class="font-medium text-slate-700">{{ $batch->expiry_date->format('d M Y') }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] text-slate-400 uppercase block">Sisa Hari</span>
+                                        @if($batch->days_left < 0)
+                                            <span class="font-bold text-rose-600">Expired ({{ abs($batch->days_left) }} hr lalu)</span>
+                                        @else
+                                            <span class="font-bold text-amber-600">{{ $batch->days_left }} hari lagi</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="hidden md:block overflow-x-auto border border-slate-300 rounded-xl">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">

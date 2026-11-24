@@ -27,10 +27,19 @@ class BarangKeluarController extends Controller
 
     public function store(Request $request)
     {
+        $barang = Barang::find($request->barang_id);
+        $maxStock = $barang ? $barang->stok : 0;
+
         $request->validate([
             'barang_id' => 'required|exists:barangs,id',
-            'jumlah' => 'required|integer|min:1',
+            'jumlah' => 'required|numeric|min:0.01|max:' . $maxStock,
             'tanggal' => 'required|date',
+        ], [
+            'barang_id.required' => 'Pilih barang yang akan dikeluarkan.',
+            'jumlah.required' => 'Jumlah pengeluaran barang wajib diisi.',
+            'jumlah.min' => 'Jumlah pengeluaran minimal 0.01.',
+            'jumlah.max' => "Jumlah melebihi stok yang tersedia di gudang ({$maxStock}).",
+            'tanggal.required' => 'Tanggal pengeluaran wajib diisi.',
         ]);
 
         try {

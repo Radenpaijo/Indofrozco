@@ -277,7 +277,7 @@
                 window.toast.info({!! json_encode(session('status')) !!});
             @endif
 
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 @php
                     $errorList = implode('<br>• ', $errors->all());
                 @endphp

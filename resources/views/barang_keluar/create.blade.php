@@ -1,25 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-4 min-w-0">
-            <x-back-button />
+        <div class="flex items-center gap-3 min-w-0">
+            <x-back-button :href="route('barang-keluar.index')" />
             <div class="min-w-0">
-                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                    {{ __('Rilis Pengeluaran Manual (Barang Keluar)') }}
+                <h2 class="font-bold text-xl sm:text-2xl text-slate-800 leading-tight truncate">
+                    {{ __('Rilis Pengeluaran Manual') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Pengeluaran stok barang secara manual dari gudang.</p>
             </div>
         </div>
     </x-slot>
 
     <div class="w-full">
-
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                <form method="POST" action="{{ route('barang-keluar.store') }}" class="space-y-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8">
+            <form id="barang-keluar-form" method="POST" action="{{ route('barang-keluar.store') }}" class="space-y-6">
                     @csrf
 
                     <div>
-                        <x-input-label for="barang_id" :value="__('Pilih Barang')" />
-                        <select id="barang_id" name="barang_id" required class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        <x-input-label for="barang_id" :value="__('Pilih Barang')" :required="true" />
+                        <select id="barang_id" name="barang_id" required class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" autofocus>
                             <option value="">-- Pilih Barang --</option>
                             @foreach($barangs as $barang)
                                 <option value="{{ $barang->id }}" {{ old('barang_id') == $barang->id ? 'selected' : '' }}>
@@ -31,13 +29,13 @@
                     </div>
 
                     <div>
-                        <x-input-label for="jumlah" :value="__('Jumlah Pengeluaran')" />
+                        <x-input-label for="jumlah" :value="__('Jumlah Pengeluaran')" :required="true" />
                         <x-text-input id="jumlah" class="block mt-1 w-full" type="number" name="jumlah" :value="old('jumlah')" required min="1" placeholder="Masukkan jumlah rilis" />
                         <x-input-error :messages="$errors->get('jumlah')" class="mt-2" />
                     </div>
 
                     <div>
-                        <x-input-label for="tanggal" :value="__('Tanggal Pengeluaran')" />
+                        <x-input-label for="tanggal" :value="__('Tanggal Pengeluaran')" :required="true" />
                         <x-text-input id="tanggal" class="block mt-1 w-full" type="date" name="tanggal" :value="old('tanggal', date('Y-m-d'))" required />
                         <x-input-error :messages="$errors->get('tanggal')" class="mt-2" />
                     </div>
@@ -54,4 +52,59 @@
             </div>
         </div>
     </div>
+
+    <!-- Mouse-free keyboard navigation script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('barang-keluar-form');
+            if (!form) return;
+
+            function getNavigableInputs() {
+                return Array.from(form.querySelectorAll(
+                    'input:not([type="hidden"]):not([disabled]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"])'
+                )).filter(el => el.offsetParent !== null);
+            }
+
+            const initial = document.getElementById('barang_id');
+            if (initial) initial.focus();
+
+            form.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    form.requestSubmit();
+                    return;
+                }
+
+                if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                    const target = e.target;
+                    if (target.tagName === 'BUTTON' || target.tagName === 'A') return;
+
+                    if (target.matches('input, select, textarea')) {
+                        e.preventDefault();
+                        const inputs = getNavigableInputs();
+                        const idx = inputs.indexOf(target);
+                        if (idx >= 0 && idx < inputs.length - 1) {
+                            inputs[idx + 1].focus();
+                            if (inputs[idx + 1].select && inputs[idx + 1].type !== 'date') inputs[idx + 1].select();
+                        } else if (idx === inputs.length - 1) {
+                            form.requestSubmit();
+                        }
+                    }
+                }
+
+                if (e.key === 'Enter' && e.shiftKey && !e.ctrlKey && !e.altKey) {
+                    const target = e.target;
+                    if (target.matches('input, select, textarea')) {
+                        e.preventDefault();
+                        const inputs = getNavigableInputs();
+                        const idx = inputs.indexOf(target);
+                        if (idx > 0) {
+                            inputs[idx - 1].focus();
+                            if (inputs[idx - 1].select && inputs[idx - 1].type !== 'date') inputs[idx - 1].select();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </x-app-layout>

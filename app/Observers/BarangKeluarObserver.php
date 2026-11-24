@@ -41,11 +41,12 @@ class BarangKeluarObserver
         // 1. Decrement overall physical stock on Barang catalog
         $barang->decrement('stok', $qtyNeeded);
 
-        // 2. Dynamic FIFO Batch Deduction (First In, First Out)
-        // Find active batches for this item, sorted by entry date (FIFO)
+        // 2. Dynamic FEFO Batch Deduction (First Expired, First Out / Prioritaskan ED terdekat)
+        // Find active batches for this item, sorted by expiration date (FEFO) then entry date (FIFO)
         $activeBatches = InventoryBatch::where('barang_id', $barangKeluar->barang_id)
             ->where('stok', '>', 0)
             ->where('status', 'active')
+            ->orderByRaw('COALESCE(tanggal_kadaluarsa, "9999-12-31") ASC')
             ->orderBy('tanggal_masuk', 'asc')
             ->orderBy('id', 'asc')
             ->get();
@@ -79,11 +80,12 @@ class BarangKeluarObserver
                     'reference_type' => 'BarangKeluar',
                     'reference_id' => $barangKeluar->id,
                     'user_id' => $barangKeluar->user_id,
-                    'catatan' => "Alokasi FIFO Batch #{$batch->batch_number} (-{$deduct} " . ($barang->satuan ?? 'unit') . ")",
+                    'catatan' => "Alokasi FEFO Batch #{$batch->batch_number} (-{$deduct} " . ($barang->satuan ?? 'unit') . ")",
                 ]);
 
                 $batchDetails[] = [
                     'batch_number' => $batch->batch_number,
+                    'tanggal_kadaluarsa' => $batch->tanggal_kadaluarsa,
                     'jumlah_dipotong' => $deduct,
                     'sisa_stok_batch' => $batch->stok,
                 ];

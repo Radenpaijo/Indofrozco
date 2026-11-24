@@ -76,12 +76,19 @@ class BarangController extends Controller
         if (!$permintaan->filled('kode_barang')) {
             $permintaan->merge(['kode_barang' => Barang::buatKodeOtomatis()]);
         }
+        if (!$permintaan->filled('satuan') && $permintaan->filled('unit_id')) {
+            $unit = Unit::find($permintaan->unit_id);
+            if ($unit) {
+                $permintaan->merge(['satuan' => $unit->name]);
+            }
+        }
 
         $permintaan->validate([
             'kode_barang' => 'required|unique:barangs,kode_barang',
             'nama_barang' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'unit_id' => 'required|exists:units,id',
+            'location_id' => 'nullable|exists:locations,id',
             'satuan' => 'required|string|max:50',
             'stok_minimum' => 'nullable|integer|min:0',
             'description' => 'nullable|string',
@@ -93,11 +100,34 @@ class BarangController extends Controller
             'unit_id.required' => 'Satuan barang wajib dipilih.',
         ]);
 
+        $lokasiGudang = null;
+        $kodeRak = null;
+        if ($permintaan->filled('location_id')) {
+            $loc = Location::with('warehouse')->find($permintaan->location_id);
+            if ($loc) {
+                if ($permintaan->filled('stok_minimum') && $loc->capacity !== null && (float)$loc->capacity > 0) {
+                    $stokMin = (float)$permintaan->stok_minimum;
+                    $maxCap = (float)$loc->capacity;
+                    if ($stokMin > $maxCap) {
+                        return back()->withInput()->withErrors([
+                            'stok_minimum' => "Batas stok minimum ({$stokMin}) tidak boleh melebihi kapasitas maksimal rak {$loc->code} (" . number_format($maxCap) . ").",
+                            'location_id' => "Kapasitas maksimal rak {$loc->code} hanya " . number_format($maxCap) . ", tidak mencukupi untuk batas stok minimum ({$stokMin}).",
+                        ]);
+                    }
+                }
+                $lokasiGudang = $loc->warehouse->name ?? 'Gudang Utama';
+                $kodeRak = $loc->code;
+            }
+        }
+
         $dataBarang = [
             'kode_barang' => $permintaan->kode_barang,
             'nama_barang' => $permintaan->nama_barang,
             'category_id' => $permintaan->category_id,
             'unit_id' => $permintaan->unit_id,
+            'location_id' => $permintaan->location_id ?: null,
+            'lokasi_gudang' => $lokasiGudang,
+            'kode_rak' => $kodeRak,
             'satuan' => $permintaan->satuan,
             'stok_minimum' => $permintaan->stok_minimum ?? 0,
             'description' => $permintaan->description,
@@ -131,11 +161,21 @@ class BarangController extends Controller
 
     public function update(Request $permintaan, Barang $barang)
     {
+        $permintaan->merge(['kode_barang' => $barang->kode_barang]);
+
+        if (!$permintaan->filled('satuan') && $permintaan->filled('unit_id')) {
+            $unit = Unit::find($permintaan->unit_id);
+            if ($unit) {
+                $permintaan->merge(['satuan' => $unit->name]);
+            }
+        }
+
         $permintaan->validate([
             'kode_barang' => 'required|unique:barangs,kode_barang,' . $barang->id,
             'nama_barang' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'unit_id' => 'required|exists:units,id',
+            'location_id' => 'nullable|exists:locations,id',
             'satuan' => 'required|string|max:50',
             'stok_minimum' => 'nullable|integer|min:0',
             'description' => 'nullable|string',
@@ -147,12 +187,38 @@ class BarangController extends Controller
             'unit_id.required' => 'Satuan barang wajib dipilih.',
         ]);
 
+        $lokasiGudang = $barang->lokasi_gudang;
+        $kodeRak = $barang->kode_rak;
+        if ($permintaan->filled('location_id')) {
+            $loc = Location::with('warehouse')->find($permintaan->location_id);
+            if ($loc) {
+                if ($permintaan->filled('stok_minimum') && $loc->capacity !== null && (float)$loc->capacity > 0) {
+                    $stokMin = (float)$permintaan->stok_minimum;
+                    $maxCap = (float)$loc->capacity;
+                    if ($stokMin > $maxCap) {
+                        return back()->withInput()->withErrors([
+                            'stok_minimum' => "Batas stok minimum ({$stokMin}) tidak boleh melebihi kapasitas maksimal rak {$loc->code} (" . number_format($maxCap) . ").",
+                            'location_id' => "Kapasitas maksimal rak {$loc->code} hanya " . number_format($maxCap) . ", tidak mencukupi untuk batas stok minimum ({$stokMin}).",
+                        ]);
+                    }
+                }
+                $lokasiGudang = $loc->warehouse->name ?? 'Gudang Utama';
+                $kodeRak = $loc->code;
+            }
+        } elseif ($permintaan->has('location_id') && empty($permintaan->location_id)) {
+            $lokasiGudang = null;
+            $kodeRak = null;
+        }
+
         $dataLama = $barang->toArray();
         $dataBarang = [
             'kode_barang' => $permintaan->kode_barang,
             'nama_barang' => $permintaan->nama_barang,
             'category_id' => $permintaan->category_id,
             'unit_id' => $permintaan->unit_id,
+            'location_id' => $permintaan->location_id ?: null,
+            'lokasi_gudang' => $lokasiGudang,
+            'kode_rak' => $kodeRak,
             'satuan' => $permintaan->satuan,
             'stok_minimum' => $permintaan->stok_minimum ?? 0,
             'description' => $permintaan->description,
@@ -212,5 +278,119 @@ class BarangController extends Controller
         $expiringBatches = $barang->dapatkanBatchKadaluarsa();
 
         return view('barangs.show', compact('barang', 'barangMasuk', 'barangKeluar', 'expiringBatches'));
+    }
+
+    public function stockCard(Barang $barang, Request $request)
+    {
+        $startDate = $request->query('start_date', now()->subMonths(3)->toDateString());
+        $endDate = $request->query('end_date', now()->toDateString());
+
+        // Transaksi dari ledger
+        $transactions = \App\Models\InventoryTransaction::with(['batch', 'user'])
+            ->where('barang_id', $barang->id)
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $initialIn = \App\Models\InventoryTransaction::where('barang_id', $barang->id)
+            ->whereDate('created_at', '<', $startDate)
+            ->where('type', 'IN')
+            ->sum('jumlah');
+
+        $initialOut = \App\Models\InventoryTransaction::where('barang_id', $barang->id)
+            ->whereDate('created_at', '<', $startDate)
+            ->where('type', 'OUT')
+            ->sum('jumlah');
+
+        $initialBalance = max(0, $initialIn - $initialOut);
+
+        // Fallback jika belum ada di tabel ledger
+        if ($transactions->isEmpty() && ($barang->barangMasuks()->exists() || $barang->barangKeluars()->exists())) {
+            $masuks = $barang->barangMasuks()->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate)->get()->map(function($m) {
+                return (object)[
+                    'id' => 'm_' . $m->id,
+                    'created_at' => $m->tanggal,
+                    'type' => 'IN',
+                    'jumlah' => $m->jumlah,
+                    'nomor_referensi' => $m->no_masuk,
+                    'catatan' => $m->batch_number ? "Lot: {$m->batch_number}" : ($m->no_surat_jalan ? "SJ: {$m->no_surat_jalan}" : 'Penerimaan'),
+                    'batch' => (object)['batch_number' => $m->batch_number, 'tanggal_kadaluarsa' => $m->tanggal_kadaluarsa],
+                ];
+            });
+
+            $keluars = $barang->barangKeluars()->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate)->get()->map(function($k) {
+                return (object)[
+                    'id' => 'k_' . $k->id,
+                    'created_at' => $k->tanggal,
+                    'type' => 'OUT',
+                    'jumlah' => $k->jumlah,
+                    'nomor_referensi' => 'OUT-' . $k->id,
+                    'catatan' => $k->permintaanBarang ? "Permintaan: {$k->permintaanBarang->no_permintaan}" : 'Pengeluaran Produksi',
+                    'batch' => null,
+                ];
+            });
+
+            $transactions = $masuks->concat($keluars)->sortBy('created_at')->values();
+        }
+
+        return view('barangs.stock-card', compact('barang', 'transactions', 'initialBalance', 'startDate', 'endDate'));
+    }
+
+    public function printStockCard(Barang $barang, Request $request)
+    {
+        $startDate = $request->query('start_date', now()->subMonths(3)->toDateString());
+        $endDate = $request->query('end_date', now()->toDateString());
+
+        $transactions = \App\Models\InventoryTransaction::with(['batch', 'user'])
+            ->where('barang_id', $barang->id)
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $initialIn = \App\Models\InventoryTransaction::where('barang_id', $barang->id)
+            ->whereDate('created_at', '<', $startDate)
+            ->where('type', 'IN')
+            ->sum('jumlah');
+
+        $initialOut = \App\Models\InventoryTransaction::where('barang_id', $barang->id)
+            ->whereDate('created_at', '<', $startDate)
+            ->where('type', 'OUT')
+            ->sum('jumlah');
+
+        $initialBalance = max(0, $initialIn - $initialOut);
+
+        if ($transactions->isEmpty() && ($barang->barangMasuks()->exists() || $barang->barangKeluars()->exists())) {
+            $masuks = $barang->barangMasuks()->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate)->get()->map(function($m) {
+                return (object)[
+                    'id' => 'm_' . $m->id,
+                    'created_at' => $m->tanggal,
+                    'type' => 'IN',
+                    'jumlah' => $m->jumlah,
+                    'nomor_referensi' => $m->no_masuk,
+                    'catatan' => $m->batch_number ? "Lot: {$m->batch_number}" : ($m->no_surat_jalan ? "SJ: {$m->no_surat_jalan}" : 'Penerimaan'),
+                    'batch' => (object)['batch_number' => $m->batch_number, 'tanggal_kadaluarsa' => $m->tanggal_kadaluarsa],
+                ];
+            });
+
+            $keluars = $barang->barangKeluars()->whereDate('tanggal', '>=', $startDate)->whereDate('tanggal', '<=', $endDate)->get()->map(function($k) {
+                return (object)[
+                    'id' => 'k_' . $k->id,
+                    'created_at' => $k->tanggal,
+                    'type' => 'OUT',
+                    'jumlah' => $k->jumlah,
+                    'nomor_referensi' => 'OUT-' . $k->id,
+                    'catatan' => $k->permintaanBarang ? "Permintaan: {$k->permintaanBarang->no_permintaan}" : 'Pengeluaran Produksi',
+                    'batch' => null,
+                ];
+            });
+
+            $transactions = $masuks->concat($keluars)->sortBy('created_at')->values();
+        }
+
+        return view('barangs.stock-card-print', compact('barang', 'transactions', 'initialBalance', 'startDate', 'endDate'));
     }
 }

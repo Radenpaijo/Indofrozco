@@ -6,7 +6,6 @@
                 <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                     {{ __('Edit Tipe Gudang') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Perbarui informasi tipe gudang {{ $warehouseType->name }}.</p>
             </div>
         </div>
     </x-slot>
@@ -17,18 +16,16 @@
                 @csrf
                 @method('PUT')
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <x-label for="code">Kode Tipe Gudang</x-label>
-                        <x-input id="code" class="font-mono bg-slate-50" type="text" name="code" :value="old('code', $warehouseType->code)" required autofocus />
-                        <x-input-error :messages="$errors->get('code')" class="mt-2" />
-                    </div>
+                <div class="space-y-2">
+                    <x-label for="code" required>Kode Tipe Gudang</x-label>
+                    <x-input id="code" class="font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $warehouseType->code)" required readonly />
+                    <x-input-error :messages="$errors->get('code')" class="mt-2" />
+                </div>
 
-                    <div class="space-y-2">
-                        <x-label for="name">Nama Tipe Gudang</x-label>
-                        <x-input id="name" type="text" name="name" :value="old('name', $warehouseType->name)" required />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+                <div class="space-y-2">
+                    <x-label for="name" required>Nama Tipe Gudang</x-label>
+                    <x-input id="name" type="text" name="name" :value="old('name', $warehouseType->name)" required autofocus />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
                 <div class="space-y-2">

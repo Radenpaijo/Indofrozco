@@ -7,7 +7,6 @@
                     <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                         {{ __('Profil Pengguna & Keamanan') }}
                     </h2>
-                    <p class="text-xs text-slate-500 mt-1">Pengaturan informasi akun dan kata sandi.</p>
                 </div>
             </div>
         </div>

@@ -1,18 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-4 min-w-0">
-            <x-back-button />
+        <div class="flex items-center gap-3 min-w-0">
+            <x-back-button :href="route('users.index')" />
             <div class="min-w-0">
-                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                    {{ __('Edit User') }}
+                <h2 class="font-bold text-xl sm:text-2xl text-slate-800 leading-tight truncate">
+                    {{ __('Edit Pengguna') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Perbarui profil {{ $user->name }} dan hak akses fiturnya.</p>
             </div>
         </div>
     </x-slot>
 
     <div class="w-full">
-            <form action="{{ route('users.update', $user) }}" method="POST" class="space-y-6">
+            <form action="{{ route('users.update', $user) }}" method="POST" class="space-y-6" autocomplete="off">
                 @csrf
                 @method('PUT')
 
@@ -25,18 +24,16 @@
                         Informasi Pengguna: {{ $user->name }}
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama Lengkap Pengguna <span class="text-rose-500">*</span></label>
-                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            @error('name') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama Lengkap Pengguna <span class="text-rose-500">*</span></label>
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}" required autocomplete="off" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        @error('name') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Alamat Email <span class="text-rose-500">*</span></label>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
-                            @error('email') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Alamat Email <span class="text-rose-500">*</span></label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="off" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                        @error('email') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -51,21 +48,21 @@
                         @error('role') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="border-t border-slate-100 pt-4">
-                        <h4 class="text-xs font-bold uppercase text-indigo-600 tracking-wider mb-1">Ubah Password (Opsional)</h4>
-                        <p class="text-xs text-slate-400 mb-3">Kosongkan jika tidak ingin mengganti password akun ini.</p>
+                    <div class="border-t border-slate-100 pt-4 space-y-4">
+                        <div>
+                            <h4 class="text-xs font-bold uppercase text-indigo-600 tracking-wider mb-1">Ubah Password (Opsional)</h4>
+                            <p class="text-xs text-slate-400">Kosongkan jika tidak ingin mengganti password akun ini.</p>
+                        </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Baru</label>
-                                <input type="password" name="password" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Kosongkan jika tidak diubah">
-                                @error('password') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
-                            </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password Baru</label>
+                            <input type="password" name="password" autocomplete="new-password" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Kosongkan jika tidak diubah">
+                            @error('password') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
 
-                            <div>
-                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Konfirmasi Password Baru</label>
-                                <input type="password" name="password_confirmation" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Ulangi password baru">
-                            </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Konfirmasi Password Baru</label>
+                            <input type="password" name="password_confirmation" autocomplete="new-password" class="w-full rounded-xl border-slate-300 focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Ulangi password baru">
                         </div>
                     </div>
                 </div>
@@ -78,9 +75,8 @@
                                 <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                 </svg>
-                                Hak Akses Fitur & Menu Sistem (Centang Fitur yang Diizinkan)
+                                Hak Akses Fitur & Menu
                             </h3>
-                            <p class="text-xs text-slate-500 mt-1">Centang atau ubah daftar fitur yang boleh diakses oleh pengguna ini.</p>
                         </div>
 
                         <!-- Quick Toggle Action Buttons -->
@@ -137,8 +133,30 @@
         </div>
     </div>
 
-    <!-- Toggle All JS Script -->
+    <!-- Toggle All & Auto Preset JS Script -->
     <script>
+        const rolePresets = {
+            'admin': @json(\App\Models\User::getDefaultPermissionsForRole('admin')),
+            'owner': @json(\App\Models\User::getDefaultPermissionsForRole('owner')),
+            'admin_gudang': @json(\App\Models\User::getDefaultPermissionsForRole('admin_gudang')),
+            'gudang': @json(\App\Models\User::getDefaultPermissionsForRole('gudang')),
+            'purchasing': @json(\App\Models\User::getDefaultPermissionsForRole('purchasing')),
+            'produksi': @json(\App\Models\User::getDefaultPermissionsForRole('produksi')),
+        };
+
+        const roleSelect = document.querySelector('select[name="role"]');
+        if (roleSelect) {
+            roleSelect.addEventListener('change', function() {
+                const selectedRole = this.value;
+                if (rolePresets[selectedRole]) {
+                    const allowed = rolePresets[selectedRole];
+                    document.querySelectorAll('.perm-checkbox').forEach(cb => {
+                        cb.checked = allowed.includes(cb.value);
+                    });
+                }
+            });
+        }
+
         document.getElementById('btn-select-all').addEventListener('click', function() {
             document.querySelectorAll('.perm-checkbox').forEach(cb => cb.checked = true);
         });

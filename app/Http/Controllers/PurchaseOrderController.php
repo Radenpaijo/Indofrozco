@@ -13,13 +13,35 @@ use Exception;
 
 class PurchaseOrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pos = PurchaseOrder::with(['supplier', 'user', 'permintaanPembelian'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = PurchaseOrder::with(['supplier', 'user', 'permintaanPembelian']);
 
-        return view('purchase_orders.index', compact('pos'));
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('no_po', 'like', "%{$search}%")
+                  ->orWhereHas('supplier', function ($sq) use ($search) {
+                      $sq->where('nama_supplier', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $counts = [
+            'semua' => (clone $query)->count(),
+            'dikirim' => (clone $query)->where('status', 'dikirim')->count(),
+            'diterima_sebagian' => (clone $query)->where('status', 'diterima_sebagian')->count(),
+            'selesai' => (clone $query)->where('status', 'selesai')->count(),
+            'dibatalkan' => (clone $query)->where('status', 'dibatalkan')->count(),
+        ];
+
+        if ($request->filled('status') && in_array($request->status, ['dikirim', 'diterima_sebagian', 'selesai', 'dibatalkan'])) {
+            $query->where('status', $request->status);
+        }
+
+        $pos = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('purchase_orders.index', compact('pos', 'counts'));
     }
 
     public function create(Request $request)

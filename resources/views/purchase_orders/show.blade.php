@@ -1,21 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
-            <div class="flex items-center gap-4 min-w-0">
-                <x-back-button />
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <x-back-button :href="route('purchase-orders.index')" />
                 <div class="min-w-0">
-                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                        {{ __('Detail Purchase Order (PO): ') }} {{ $po->no_po }}
+                    <h2 class="font-bold text-xl sm:text-2xl text-slate-800 leading-tight truncate">
+                        {{ __('Detail PO: ') }} {{ $po->no_po }}
                     </h2>
-                    <p class="text-xs text-slate-500 mt-1">Informasi rincian pesanan & status pengiriman.</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-3 shrink-0">
-                <a href="{{ route('purchase-orders.print', $po) }}" target="_blank" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-md shadow-indigo-600/20">
-                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    Cetak Dokumen PO
+            <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                <a href="{{ route('purchase-orders.print', $po) }}" target="_blank" class="w-full sm:w-auto">
+                    <x-button variant="indigo" class="w-full sm:w-auto justify-center shadow-sm">
+                        <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                        Cetak Dokumen PO
+                    </x-button>
                 </a>
             </div>
         </div>
@@ -52,20 +53,35 @@
                                 <button type="button" @click="open = true" class="inline-flex items-center px-4 py-2 border border-rose-600 hover:bg-rose-50 text-rose-600 text-xs font-semibold rounded-xl transition-colors">
                                     Batalkan PO
                                 </button>
-                                <div x-show="open" x-cloak x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @keydown.escape.window="open = false">
-                                    <div x-show="open" x-transition.scale @click.outside="open = false" class="w-full max-w-md rounded-xl bg-white shadow-2xl">
-                                        <div class="flex items-center justify-between border-b px-6 py-4">
-                                            <h3 class="text-lg font-semibold text-gray-900">Konfirmasi Pembatalan PO</h3>
-                                            <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                                <div x-show="open" x-cloak x-transition.opacity 
+                                    class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-xs p-0 sm:p-4 text-left" 
+                                    @keydown.escape.window="open = false">
+                                    <div x-show="open" 
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="translate-y-full sm:translate-y-0 sm:opacity-0 sm:scale-95"
+                                        x-transition:enter-end="translate-y-0 sm:opacity-100 sm:scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="translate-y-0 sm:opacity-100 sm:scale-100"
+                                        x-transition:leave-end="translate-y-full sm:translate-y-0 sm:opacity-0 sm:scale-95"
+                                        @click.outside="open = false" 
+                                        class="w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl overflow-hidden border-t sm:border border-slate-100 max-h-[92vh] flex flex-col">
+                                        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto my-2.5 sm:hidden shrink-0"></div>
+                                        <div class="flex items-center justify-between border-b border-slate-100 px-5 sm:px-6 py-3.5 sm:py-4 shrink-0">
+                                            <h3 class="text-base font-bold text-slate-900">Konfirmasi Pembatalan PO</h3>
+                                            <button type="button" @click="open = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <div class="px-6 py-5">
-                                            <p class="text-sm text-gray-600">Apakah Anda yakin ingin membatalkan PO <span class="font-semibold text-gray-900">{{ $po->no_po }}</span>?</p>
+                                        <div class="px-5 sm:px-6 py-4 sm:py-5 space-y-3 overflow-y-auto">
+                                            <p class="text-sm text-slate-700">Apakah Anda yakin ingin membatalkan PO <span class="font-mono font-bold text-slate-900">{{ $po->no_po }}</span>?</p>
                                         </div>
-                                        <div class="flex justify-end gap-3 border-t bg-gray-50 px-6 py-4 rounded-b-xl">
-                                            <button type="button" @click="open = false" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Batal</button>
-                                            <form method="POST" action="{{ route('purchase-orders.cancel', $po->id) }}">
+                                        <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 border-t border-slate-100 bg-slate-50/70 p-4 sm:px-6 sm:py-3.5 shrink-0">
+                                            <button type="button" @click="open = false" class="w-full sm:w-auto h-11 sm:h-9 px-4 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 active:bg-slate-200 border border-slate-300 rounded-xl transition-colors flex items-center justify-center">Batal</button>
+                                            <form method="POST" action="{{ route('purchase-orders.cancel', $po->id) }}" class="w-full sm:w-auto">
                                                 @csrf
-                                                <button type="submit" class="rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">Ya, Batalkan</button>
+                                                <button type="submit" class="w-full sm:w-auto h-12 sm:h-9 px-5 text-sm sm:text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 rounded-xl shadow-sm transition-colors flex items-center justify-center">Ya, Batalkan</button>
                                             </form>
                                         </div>
                                     </div>
@@ -76,15 +92,66 @@
                 </div>
             </div>
 
-            <!-- Item Details Table & Financial Summary -->
-            <div class="bg-white rounded-lg shadow-sm border border-slate-300 overflow-hidden">
+            <!-- Item Details: Mobile Cards (block sm:hidden) & Desktop Table (hidden sm:block) -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-4 border-b border-slate-200 flex justify-between items-center">
-                    <h4 class="text-md font-bold text-slate-800">Daftar Detail Barang PO & Pemenuhan</h4>
+                    <h4 class="text-sm sm:text-base font-bold text-slate-800">Daftar Detail Barang PO & Pemenuhan</h4>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+
+                @php $calculatedSubtotal = 0; @endphp
+
+                <!-- 1. Mobile Cards View (block sm:hidden) -->
+                <div class="p-3 space-y-3 sm:hidden">
+                    @foreach($po->details as $detail)
+                        @php 
+                            $receivedQty = $po->barangMasuks->where('barang_id', $detail->barang_id)->sum('jumlah');
+                            $itemSubtotal = $detail->subtotal > 0 ? $detail->subtotal : ($detail->jumlah * $detail->harga_satuan);
+                            $calculatedSubtotal += $itemSubtotal;
+                        @endphp
+                        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                    <span class="font-bold text-sm text-slate-900 block leading-tight">{{ $detail->snapshot_nama_barang ?? ($detail->barang->nama_barang ?? '-') }}</span>
+                                    <span class="font-mono text-xs text-indigo-600 mt-0.5 block">{{ $detail->barang->kode_barang ?? '-' }}</span>
+                                </div>
+                                <div class="shrink-0 text-right">
+                                    @if($receivedQty >= $detail->jumlah)
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Selesai</span>
+                                    @elseif($receivedQty > 0)
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">Kurang {{ $detail->jumlah - $receivedQty }}</span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">Belum Datang</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-200/70">
+                                <div>
+                                    <span class="text-[10px] font-semibold uppercase text-slate-400 block">Dipesan</span>
+                                    <span class="font-bold text-slate-800">{{ $detail->jumlah }} {{ $detail->barang->satuan ?? '' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-semibold uppercase text-slate-400 block">Diterima Aktual</span>
+                                    <span class="font-bold text-slate-800">{{ $receivedQty }} {{ $detail->barang->satuan ?? '' }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-semibold uppercase text-slate-400 block">Harga Satuan</span>
+                                    <span class="font-mono text-slate-600">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-semibold uppercase text-slate-400 block">Subtotal</span>
+                                    <span class="font-mono font-bold text-slate-900">Rp {{ number_format($itemSubtotal, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- 2. Desktop Table View (hidden sm:block) -->
+                <div class="hidden sm:block overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
                         <thead>
-                            <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                            <tr class="bg-slate-100 border-b border-slate-300 text-[11px] font-bold uppercase tracking-wider text-slate-700 whitespace-nowrap">
                                 <th class="py-3.5 px-4 border-r border-slate-300">Kode Barang</th>
                                 <th class="py-3.5 px-4 border-r border-slate-300">Nama Barang (PO)</th>
                                 <th class="py-3.5 px-4 border-r border-slate-300">Jumlah Pesan</th>

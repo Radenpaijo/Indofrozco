@@ -22,9 +22,9 @@ class StockOpnameController extends Controller
 
     public function create()
     {
-        $warehouses = Warehouse::where('status', 'active')->get();
-        $locations = Location::where('status', 'active')->get();
-        $barangs = Barang::with('batches')->where('is_active', true)->get();
+        $warehouses = Warehouse::where('status', 'active')->orderBy('name')->get();
+        $locations = Location::with('warehouse')->where('status', 'active')->orderBy('code')->get();
+        $barangs = Barang::with(['batches', 'location'])->where('is_active', true)->orderBy('kode_barang')->get();
 
         return view('stock-opnames.create', compact('warehouses', 'locations', 'barangs'));
     }

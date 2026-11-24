@@ -33,8 +33,13 @@ class WarehouseType extends Model
     public static function buatKodeOtomatis(string $prefix = 'TPG-', int $padding = 3): string
     {
         $field = 'code';
+        $isSqlite = \Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
+        $orderRaw = $isSqlite
+            ? 'CAST(SUBSTR(' . $field . ', ' . (strlen($prefix) + 1) . ') AS INTEGER) DESC'
+            : 'CAST(SUBSTRING(' . $field . ', ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC';
+
         $lastRecord = self::where($field, 'like', $prefix . '%')
-            ->orderByRaw('CAST(SUBSTRING(' . $field . ', ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
+            ->orderByRaw($orderRaw)
             ->first();
 
         if ($lastRecord) {

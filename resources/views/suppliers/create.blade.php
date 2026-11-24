@@ -6,7 +6,6 @@
                 <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                     {{ __('Tambah Supplier') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Daftarkan mitra pemasok / vendor baru.</p>
             </div>
         </div>
     </x-slot>
@@ -17,7 +16,7 @@
                     @csrf
 
                     <div>
-                        <x-input-label for="nama_supplier" :value="__('Nama Supplier')" />
+                        <x-input-label for="nama_supplier" :value="__('Nama Supplier')" :required="true" />
                         <x-text-input id="nama_supplier" class="block mt-1 w-full" type="text" name="nama_supplier" :value="old('nama_supplier')" required autofocus placeholder="Contoh: PT Sumber Pangan Utama" />
                         <x-input-error :messages="$errors->get('nama_supplier')" class="mt-2" />
                     </div>

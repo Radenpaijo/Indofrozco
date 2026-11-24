@@ -13,7 +13,13 @@ class PermintaanBarang extends Model
         'no_permintaan',
         'tanggal',
         'status',
+        'status_qc',
     ];
+
+    public function qcInspection()
+    {
+        return $this->morphOne(QcInspection::class, 'reference');
+    }
 
     public function user()
     {

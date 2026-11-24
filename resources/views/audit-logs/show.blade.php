@@ -1,14 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-left">
-            <div class="flex items-center space-x-4">
-                <x-back-button :href="route('audit-logs.index')" />
-                <div>
-                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                        {{ __('Detail Audit Log #') }}{{ $auditLog->id }}
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-1">Rincian aktivitas audit log transaksi dan perubahan data master.</p>
-                </div>
+        <div class="flex items-center gap-3 min-w-0">
+            <x-back-button :href="route('audit-logs.index')" />
+            <div class="min-w-0">
+                <h2 class="font-bold text-xl sm:text-2xl text-slate-800 leading-tight truncate">
+                    {{ __('Detail Audit Log #') }}{{ $auditLog->id }}
+                </h2>
             </div>
         </div>
     </x-slot>

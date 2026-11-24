@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Barang;
 use App\Models\PurchaseOrder;
 use App\Models\BarangMasuk;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -13,7 +14,7 @@ class BarangMasukController extends Controller
 {
     public function index()
     {
-        $barangMasuks = BarangMasuk::with(['barang', 'user', 'purchaseOrder'])
+        $barangMasuks = BarangMasuk::with(['barang', 'user', 'purchaseOrder', 'location.warehouse', 'qcInspection'])
             ->orderBy('tanggal', 'desc')
             ->paginate(10);
 
@@ -22,22 +23,23 @@ class BarangMasukController extends Controller
 
     public function create(Request $request)
     {
-        $barangs = Barang::where('is_active', true)->get();
+        $barangs = Barang::with('location')->where('is_active', true)->get();
+        $locations = Location::with('warehouse')->where('status', 'active')->get();
         
         // Fetch active POs for receipt linking
         $activePOs = PurchaseOrder::whereIn('status', ['dikirim', 'diterima_sebagian'])
-            ->with(['supplier', 'details.barang.unit'])
+            ->with(['supplier', 'details.barang.unit', 'details.barang.location'])
             ->get();
 
         $selectedPO = null;
         if ($request->filled('po_id')) {
-            $selectedPO = PurchaseOrder::with(['supplier', 'details.barang.unit'])->find($request->po_id);
+            $selectedPO = PurchaseOrder::with(['supplier', 'details.barang.unit', 'details.barang.location'])->find($request->po_id);
             if ($selectedPO && !in_array($selectedPO->status, ['dikirim', 'diterima_sebagian'])) {
                 return redirect()->route('barang-masuk.create')->with('error', 'Purchase Order ini sudah selesai atau dibatalkan.');
             }
         }
 
-        return view('barang_masuk.create', compact('barangs', 'activePOs', 'selectedPO'));
+        return view('barang_masuk.create', compact('barangs', 'locations', 'activePOs', 'selectedPO'));
     }
 
     public function store(Request $request)
@@ -48,7 +50,12 @@ class BarangMasukController extends Controller
             'tanggal' => 'required|date',
             'items' => 'required|array|min:1',
             'items.*.barang_id' => 'required|exists:barangs,id',
-            'items.*.jumlah' => 'required|integer|min:1',
+            'items.*.location_id' => 'nullable|exists:locations,id',
+            'items.*.jumlah' => 'required|numeric|min:0.01',
+            'items.*.jumlah_pack' => 'nullable|integer|min:1',
+            'items.*.batch_number' => 'nullable|string|max:100',
+            'items.*.tanggal_kadaluarsa' => 'nullable|date',
+            'qc_suhu' => 'nullable|numeric',
         ]);
 
         try {
@@ -69,16 +76,46 @@ class BarangMasukController extends Controller
 
             // Record each item
             foreach ($request->items as $item) {
-                // If it is fresh shrimp, the observer will auto-create a corresponding BarangKeluar to production.
-                BarangMasuk::create([
+                $barang = Barang::find($item['barang_id']);
+                $targetLocationId = !empty($item['location_id']) ? $item['location_id'] : ($barang ? $barang->location_id : null);
+
+                $barangMasuk = BarangMasuk::create([
                     'no_masuk' => $noMasuk,
                     'po_id' => $request->po_id,
                     'barang_id' => $item['barang_id'],
+                    'location_id' => $targetLocationId,
                     'jumlah' => $item['jumlah'],
+                    'jumlah_pack' => !empty($item['jumlah_pack']) ? $item['jumlah_pack'] : null,
+                    'batch_number' => !empty($item['batch_number']) ? $item['batch_number'] : null,
+                    'tanggal_kadaluarsa' => !empty($item['tanggal_kadaluarsa']) ? $item['tanggal_kadaluarsa'] : null,
                     'no_surat_jalan' => $request->no_surat_jalan,
                     'user_id' => auth()->id(),
                     'tanggal' => $request->tanggal,
                 ]);
+
+                // Simpan QC Inbound (FRM.JFD.01.01) jika diaktifkan
+                if ($request->has('qc_aktif')) {
+                    \App\Models\QcInspection::create([
+                        'reference_type' => BarangMasuk::class,
+                        'reference_id' => $barangMasuk->id,
+                        'user_id' => auth()->id(),
+                        'tipe_qc' => 'inbound_receiving',
+                        'nomor_dokumen' => 'FRM.JFD.01.01',
+                        'tanggal_cek' => $request->tanggal,
+                        'jam_cek' => now()->format('H:i:s'),
+                        'kebersihan_kendaraan' => $request->boolean('qc_kebersihan_kendaraan', true),
+                        'kemasan_utuh' => $request->boolean('qc_kemasan_utuh', true),
+                        'expire_date_aman' => $request->boolean('qc_expire_date_aman', true),
+                        'bebas_benda_asing' => $request->boolean('qc_bebas_benda_asing', true),
+                        'kondisi_aroma' => $request->boolean('qc_kondisi_aroma', true),
+                        'kondisi_tekstur' => $request->boolean('qc_kondisi_tekstur', true),
+                        'kondisi_penampakan' => $request->boolean('qc_kondisi_penampakan', true),
+                        'suhu' => $request->filled('qc_suhu') ? $request->qc_suhu : null,
+                        'status_qc' => $request->input('qc_status', 'pass'),
+                        'tindakan_koreksi' => $request->input('qc_tindakan_koreksi'),
+                        'catatan' => $request->input('qc_catatan'),
+                    ]);
+                }
             }
 
             // Recalculate PO status if linked

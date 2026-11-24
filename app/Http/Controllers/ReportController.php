@@ -7,6 +7,7 @@ use App\Models\BarangKeluar;
 use App\Models\PurchaseOrder;
 use App\Models\PermintaanBarang;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ReportController extends Controller
 {
@@ -17,8 +18,62 @@ class ReportController extends Controller
         $reportType = $request->input('type', 'gudang'); // options: 'gudang', 'pembelian', 'produksi'
 
         $reportData = $this->getReportData($reportType, $startDate, $endDate);
+        $perPage = 15;
+        $page = max(1, (int) $request->input('page', 1));
+        $sumTotalPO = 0;
 
-        return view('reports.index', compact('reportData', 'startDate', 'endDate', 'reportType'));
+        if ($reportType === 'gudang') {
+            $allItems = collect();
+            foreach ($reportData['masuk'] as $m) {
+                $m->jenis = 'MASUK';
+                $allItems->push($m);
+            }
+            foreach ($reportData['keluar'] as $k) {
+                $k->jenis = 'KELUAR';
+                $allItems->push($k);
+            }
+            $allItems = $allItems->sortByDesc('tanggal')->values();
+        } elseif ($reportType === 'pembelian') {
+            $allItems = collect();
+            foreach ($reportData['pos'] as $po) {
+                foreach ($po->details as $d) {
+                    $itemTotal = (float) $d->jumlah * (float) $d->harga_satuan;
+                    $sumTotalPO += $itemTotal;
+                    $allItems->push((object) [
+                        'po' => $po,
+                        'detail' => $d,
+                        'item_total' => $itemTotal,
+                    ]);
+                }
+            }
+        } else {
+            $allItems = collect();
+            foreach ($reportData['permintaans'] as $req) {
+                foreach ($req->details as $d) {
+                    $allItems->push((object) [
+                        'req' => $req,
+                        'detail' => $d,
+                    ]);
+                }
+            }
+        }
+
+        $paginatedItems = new LengthAwarePaginator(
+            $allItems->forPage($page, $perPage)->values(),
+            $allItems->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('reports.index', compact(
+            'reportData',
+            'paginatedItems',
+            'sumTotalPO',
+            'startDate',
+            'endDate',
+            'reportType'
+        ));
     }
 
     public function print(Request $request)

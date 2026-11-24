@@ -44,6 +44,8 @@ class CategoryController extends Controller
 
     public function update(Request $permintaan, Category $category)
     {
+        $permintaan->merge(['code' => $category->code]);
+
         $permintaan->validate([
             'code' => 'required|string|max:50|unique:categories,code,' . $category->id,
             'name' => 'required|string|max:255',

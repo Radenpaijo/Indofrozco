@@ -7,7 +7,6 @@
                     <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                         {{ __('Pusat Kontrol Administrator') }}
                     </h2>
-                    <p class="text-xs text-slate-500 mt-1">Panel utama pengawasan sistem, manajemen user, dan pengaturan master data dinamis.</p>
                 </div>
             </div>
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">

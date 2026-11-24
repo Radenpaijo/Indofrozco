@@ -8,7 +8,24 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Location extends Model
 {
-    protected $fillable = ['warehouse_id', 'code', 'name', 'capacity', 'status'];
+    protected $fillable = ['warehouse_id', 'code', 'name', 'capacity', 'satuan', 'status'];
+
+    /**
+     * Label satuan kapasitas rak (misal: Kg, Karung, Box, Pcs).
+     */
+    public function getSatuanLabelAttribute(): string
+    {
+        if (!empty($this->satuan)) {
+            return $this->satuan;
+        }
+
+        if ($this->relationLoaded('barangs') && $this->barangs->isNotEmpty()) {
+            $barang = $this->barangs->first();
+            return $barang->unit->name ?? ($barang->satuan ?? '');
+        }
+
+        return '';
+    }
 
     public function warehouse(): BelongsTo
     {
@@ -35,7 +52,28 @@ class Location extends Model
      */
     public function hitungKapasitasTerpakai(): float
     {
-        return (float) Barang::where('location_id', $this->id)->sum('stok');
+        $barangStok = (float) Barang::where('location_id', $this->id)->sum('stok');
+        $batchStok = (float) InventoryBatch::where('location_id', $this->id)->where('status', 'active')->sum('stok_sekarang');
+        return max($barangStok, $batchStok);
+    }
+
+    /**
+     * Kapasitas terpakai saat ini.
+     */
+    public function getUsedCapacityAttribute(): float
+    {
+        return $this->hitungKapasitasTerpakai();
+    }
+
+    /**
+     * Sisa kapasitas rak (null jika tanpa batas).
+     */
+    public function getSisaKapasitasAttribute(): ?float
+    {
+        if ($this->capacity === null || (float)$this->capacity <= 0) {
+            return null; // Tanpa batas kapasitas
+        }
+        return max(0.0, (float)$this->capacity - $this->hitungKapasitasTerpakai());
     }
 
     /**
@@ -44,8 +82,13 @@ class Location extends Model
     public static function buatKodeOtomatis(string $prefix = 'RAK-', int $padding = 3): string
     {
         $field = 'code';
+        $isSqlite = \Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite';
+        $orderRaw = $isSqlite
+            ? 'CAST(SUBSTR(' . $field . ', ' . (strlen($prefix) + 1) . ') AS INTEGER) DESC'
+            : 'CAST(SUBSTRING(' . $field . ', ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC';
+
         $lastRecord = self::where($field, 'like', $prefix . '%')
-            ->orderByRaw('CAST(SUBSTRING(' . $field . ', ' . (strlen($prefix) + 1) . ') AS UNSIGNED) DESC')
+            ->orderByRaw($orderRaw)
             ->first();
 
         if ($lastRecord) {

@@ -6,7 +6,6 @@
                 <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                     {{ __('Tambah Gudang') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Tambahkan data gudang baru.</p>
             </div>
         </div>
     </x-slot>
@@ -16,51 +15,46 @@
             <form action="{{ route('warehouses.store') }}" method="POST" class="space-y-6">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <x-input-label for="code" :value="__('Kode Gudang')" />
-                        <x-text-input id="code" class="block mt-1 w-full font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $nextCode)" required readonly placeholder="GDG-001" />
-                        <x-input-error :messages="$errors->get('code')" class="mt-2" />
-                        <p class="text-[11px] text-slate-400 mt-1">Kode dibuat otomatis oleh sistem.</p>
-                    </div>
-
-                    <div>
-                        <x-input-label for="name" :value="__('Nama Gudang')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required placeholder="Contoh: Cold Storage 01" />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+                <div>
+                    <x-input-label for="code" :value="__('Kode Gudang')" :required="true" />
+                    <x-text-input id="code" class="block mt-1 w-full font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $nextCode)" required readonly placeholder="GDG-001" />
+                    <x-input-error :messages="$errors->get('code')" class="mt-2" />
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <x-input-label for="warehouse_type_id" :value="__('Tipe Gudang *')" />
-                            <a href="{{ route('warehouse-types.create') }}" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center">
-                                + Tambah Tipe Gudang
-                            </a>
-                        </div>
-                        <select id="warehouse_type_id" name="warehouse_type_id" required class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
-                            <option value="">-- Pilih Tipe Gudang --</option>
-                            @foreach($types as $type)
-                                <option value="{{ $type->id }}" {{ old('warehouse_type_id') === $type->id ? 'selected' : '' }}>
-                                    {{ $type->name }} ({{ $type->code }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @if($types->isEmpty())
-                            <p class="text-xs text-amber-600 mt-1 font-semibold">⚠️ Belum ada Tipe Gudang. <a href="{{ route('warehouse-types.create') }}" target="_blank" class="underline text-indigo-600">Klik di sini untuk menambah Tipe Gudang Baru</a>.</p>
-                        @endif
-                        <x-input-error :messages="$errors->get('warehouse_type_id')" class="mt-2" />
-                    </div>
+                <div>
+                    <x-input-label for="name" :value="__('Nama Gudang')" :required="true" />
+                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required placeholder="Contoh: Cold Storage 01" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
 
-                    <div>
-                        <x-input-label for="status" :value="__('Status')" />
-                        <select id="status" name="status" class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
-                            <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif</option>
-                            <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                        </select>
-                        <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                <div>
+                    <div class="flex items-center justify-between">
+                        <x-input-label for="warehouse_type_id" :value="__('Tipe Gudang *')" />
+                        <a href="{{ route('warehouse-types.create') }}" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center">
+                            + Tambah Tipe Gudang
+                        </a>
                     </div>
+                    <select id="warehouse_type_id" name="warehouse_type_id" required class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                        <option value="">-- Pilih Tipe Gudang --</option>
+                        @foreach($types as $type)
+                            <option value="{{ $type->id }}" {{ old('warehouse_type_id') === $type->id ? 'selected' : '' }}>
+                                {{ $type->name }} ({{ $type->code }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @if($types->isEmpty())
+                        <p class="text-xs text-amber-600 mt-1 font-semibold">⚠️ Belum ada Tipe Gudang. <a href="{{ route('warehouse-types.create') }}" target="_blank" class="underline text-indigo-600">Klik di sini untuk menambah Tipe Gudang Baru</a>.</p>
+                    @endif
+                    <x-input-error :messages="$errors->get('warehouse_type_id')" class="mt-2" />
+                </div>
+
+                <div>
+                    <x-input-label for="status" :value="__('Status')" />
+                    <select id="status" name="status" class="block mt-1 w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm py-2.5">
+                        <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif</option>
+                        <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                    <x-input-error :messages="$errors->get('status')" class="mt-2" />
                 </div>
 
                 <div>

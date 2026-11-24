@@ -11,13 +11,21 @@ class CheckPermission
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, Closure $next, string $permission): Response
+    public function handle(Request $request, Closure $next, ...$permissions): Response
     {
         if (!$request->user()) {
             return redirect()->route('login');
         }
 
-        if (!$request->user()->hasPermission($permission)) {
+        $hasAccess = false;
+        foreach ($permissions as $permission) {
+            if ($request->user()->hasPermission($permission)) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        if (!$hasAccess) {
             abort(403, 'Akses ditolak. Anda tidak memiliki izin untuk mengakses fitur ini.');
         }
 

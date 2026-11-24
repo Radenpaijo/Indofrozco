@@ -6,7 +6,6 @@
                 <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                     {{ __('Form Mutasi Lokasi / Rak Baru') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Formulir pemindahan lokasi penyimpanan barang.</p>
             </div>
         </div>
     </x-slot>
@@ -21,7 +20,7 @@
                     @csrf
 
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Tanggal Mutasi</label>
+                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Tanggal Mutasi <span class="text-rose-500 font-bold">*</span></label>
                         <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" required class="w-full rounded-xl border-slate-300 text-sm">
                     </div>
 
@@ -36,42 +35,38 @@
                         <h3 class="font-bold text-slate-800 text-base">Detail Transfer Antar Rak</h3>
 
                         <div class="item-row p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Barang</label>
-                                    <select name="items[0][barang_id]" required class="w-full rounded-lg border-slate-300 text-xs font-semibold">
-                                        @foreach($barangs as $b)
-                                            <option value="{{ $b->id }}">{{ $b->nama_barang }} (Stok Total: {{ $b->stok }})</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Batch / Lot (Opsional)</label>
-                                    <input type="text" name="items[0][batch_id]" class="w-full rounded-lg border-slate-300 text-xs" placeholder="ID Batch / Kosongkan">
-                                </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Barang <span class="text-rose-500 font-bold">*</span></label>
+                                <select name="items[0][barang_id]" required class="w-full rounded-lg border-slate-300 text-xs font-semibold">
+                                    @foreach($barangs as $b)
+                                        <option value="{{ $b->id }}">{{ $b->nama_barang }} (Stok Total: {{ $b->stok }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Batch / Lot (Opsional)</label>
+                                <input type="text" name="items[0][batch_id]" class="w-full rounded-lg border-slate-300 text-xs" placeholder="ID Batch / Kosongkan">
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rak Asal</label>
-                                    <select name="items[0][lokasi_asal_id]" required class="w-full rounded-lg border-slate-300 text-xs">
-                                        @foreach($locations as $loc)
-                                            <option value="{{ $loc->id }}">{{ $loc->code }} ({{ $loc->warehouse->name ?? '' }})</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rak Tujuan</label>
-                                    <select name="items[0][lokasi_tujuan_id]" required class="w-full rounded-lg border-slate-300 text-xs">
-                                        @foreach($locations as $loc)
-                                            <option value="{{ $loc->id }}">{{ $loc->code }} ({{ $loc->warehouse->name ?? '' }})</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Jumlah Pindah</label>
-                                    <input type="number" step="0.01" min="0.01" name="items[0][jumlah]" required class="w-full rounded-lg border-slate-300 text-xs font-bold" placeholder="Contoh: 100.00">
-                                </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rak Asal <span class="text-rose-500 font-bold">*</span></label>
+                                <select name="items[0][lokasi_asal_id]" required class="w-full rounded-lg border-slate-300 text-xs">
+                                    @foreach($locations as $loc)
+                                        <option value="{{ $loc->id }}">{{ $loc->code }} ({{ $loc->warehouse->name ?? '' }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Rak Tujuan <span class="text-rose-500 font-bold">*</span></label>
+                                <select name="items[0][lokasi_tujuan_id]" required class="w-full rounded-lg border-slate-300 text-xs">
+                                    @foreach($locations as $loc)
+                                        <option value="{{ $loc->id }}">{{ $loc->code }} ({{ $loc->warehouse->name ?? '' }})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Jumlah Pindah <span class="text-rose-500 font-bold">*</span></label>
+                                <input type="number" step="0.01" min="0.01" name="items[0][jumlah]" required class="w-full rounded-lg border-slate-300 text-xs font-bold" placeholder="Contoh: 100.00">
                             </div>
 
                             <div>

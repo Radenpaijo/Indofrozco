@@ -48,6 +48,8 @@ class WarehouseController extends Controller
 
     public function update(Request $permintaan, Warehouse $warehouse)
     {
+        $permintaan->merge(['code' => $warehouse->code]);
+
         $permintaan->validate([
             'code' => 'required|string|max:50|unique:warehouses,code,' . $warehouse->id,
             'name' => 'required|string|max:255',

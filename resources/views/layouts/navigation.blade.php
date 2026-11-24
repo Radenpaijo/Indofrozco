@@ -7,22 +7,16 @@
 @endphp
 
 <aside id="sidebar-nav" 
-    style="background-color: #161d27 !important;"
-    class="fixed top-0 bottom-0 md:top-16 left-0 z-40 w-64 bg-slate-950 text-slate-300 flex flex-col justify-between transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800 shadow-2xl font-sans">
+    style="background-color: #161d27 !important; width: 256px !important;"
+    class="fixed top-16 bottom-0 left-0 z-50 lg:z-40 w-64 bg-slate-950 text-slate-300 flex flex-col justify-between border-r border-slate-800 shadow-2xl font-sans">
     
     <!-- Top & Navigation Links -->
     <div class="flex flex-col overflow-y-auto no-scrollbar flex-grow bg-slate-950" style="background-color: #161d27 !important;">
-        <!-- Sidebar Navigation Header (Matching Reference Image: ☰ NAVIGATION) -->
-        <div class="h-11 flex items-center justify-between px-4 bg-slate-900 border-b border-slate-800" style="background-color: #111720 !important;">
-            <div class="flex items-center space-x-2.5 text-slate-200">
-                <svg class="h-4 w-4 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span class="text-xs font-black tracking-wider uppercase text-slate-100">NAVIGATION</span>
-            </div>
-            <!-- Mobile Close Button -->
-            <button id="sidebar-close-btn" class="md:hidden p-1 text-slate-400 hover:text-white rounded focus:outline-none">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <!-- Sidebar Navigation Header with Close Button for Mobile -->
+        <div class="h-11 flex items-center justify-between px-4 bg-slate-900 border-b border-slate-800 shrink-0" style="background-color: #111720 !important;">
+            <span class="text-xs font-black tracking-wider uppercase text-slate-100">NAVIGATION</span>
+            <button id="sidebar-close-btn" type="button" class="lg:hidden p-1 text-slate-400 hover:text-white hover:bg-slate-800 rounded focus:outline-none transition-colors cursor-pointer touch-manipulation" title="Tutup Menu">
+                <svg class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -302,7 +296,6 @@
                     </div>
                 </div>
             @endif
-
         </nav>
     </div>
 
@@ -327,8 +320,9 @@
 </aside>
 
 <script>
-    function toggleNavAccordion(button) {
-        const parent = button.closest('.space-y-1');
+    function toggleNavAccordion(btn) {
+        const button = btn && btn.closest ? (btn.closest('button') || btn) : this;
+        const parent = button ? button.closest('.space-y-1') : null;
         if (!parent) return;
         
         const content = parent.querySelector('.accordion-content');
@@ -341,4 +335,5 @@
             chevron.classList.toggle('rotate-180');
         }
     }
+    window.toggleNavAccordion = toggleNavAccordion;
 </script>

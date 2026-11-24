@@ -7,6 +7,7 @@ use App\Models\BarangKeluar;
 use App\Models\InventoryBatch;
 use App\Models\InventoryTransaction;
 use App\Models\AuditLog;
+use App\Models\Location;
 use Carbon\Carbon;
 
 class BarangMasukObserver
@@ -28,6 +29,18 @@ class BarangMasukObserver
         $stokSebelum = $barang ? $barang->stok : 0;
         if ($barang) {
             $barang->increment('stok', $qtyDiterima);
+
+            // Jika barang belum memiliki rak terdefinisi, otomatis kaitkan ke rak penerimaan ini
+            if (empty($barang->location_id) && !empty($barangMasuk->location_id)) {
+                $loc = Location::with('warehouse')->find($barangMasuk->location_id);
+                if ($loc) {
+                    $barang->update([
+                        'location_id' => $loc->id,
+                        'kode_rak' => $loc->code,
+                        'lokasi_gudang' => $loc->warehouse->name ?? 'Gudang Utama',
+                    ]);
+                }
+            }
         }
         $stokSesudah = $barang ? $barang->fresh()->stok : $qtyDiterima;
 

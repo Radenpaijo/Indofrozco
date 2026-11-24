@@ -14,7 +14,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Outfit', 'Inter', ...defaultTheme.fontFamily.sans],
+                sans: ['Outfit', 'sans-serif'],
+                mono: ['Outfit', 'sans-serif'],
             },
             colors: {
                 border: 'var(--border, #cbd5e1)',

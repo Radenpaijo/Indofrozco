@@ -113,10 +113,11 @@ class InventoryService
                     'catatan' => $notes ?: "Outbound batch {$batch->batch_number}",
                 ]);
             } else {
-                // FIFO Auto recommendation (Urutan tanggal masuk tertua)
+                // FEFO Auto recommendation (Prioritas tanggal kadaluarsa terdekat, lalu tanggal masuk tertua)
                 $batches = InventoryBatch::where('barang_id', $barang->id)
                     ->where('stok', '>', 0)
                     ->where('status', 'active')
+                    ->orderByRaw('COALESCE(tanggal_kadaluarsa, "9999-12-31") ASC')
                     ->orderBy('tanggal_masuk', 'asc')
                     ->orderBy('id', 'asc')
                     ->get();

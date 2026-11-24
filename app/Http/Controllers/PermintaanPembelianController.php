@@ -11,13 +11,34 @@ use Exception;
 
 class PermintaanPembelianController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $prs = PermintaanPembelian::with(['user', 'details.barang'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = PermintaanPembelian::with(['user', 'details.barang']);
 
-        return view('permintaan_pembelian.index', compact('prs'));
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('no_pr', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $counts = [
+            'semua' => (clone $query)->count(),
+            'pending' => (clone $query)->where('status', 'pending')->count(),
+            'di_po' => (clone $query)->where('status', 'di_po')->count(),
+            'dibatalkan' => (clone $query)->where('status', 'dibatalkan')->count(),
+        ];
+
+        if ($request->filled('status') && in_array($request->status, ['pending', 'di_po', 'dibatalkan'])) {
+            $query->where('status', $request->status);
+        }
+
+        $prs = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('permintaan_pembelian.index', compact('prs', 'counts'));
     }
 
     public function create()

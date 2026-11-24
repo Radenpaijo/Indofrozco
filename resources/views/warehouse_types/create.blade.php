@@ -6,7 +6,6 @@
                 <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                     {{ __('Tambah Tipe Gudang') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Tambah kategori / jenis gudang baru ke dalam sistem.</p>
             </div>
         </div>
     </x-slot>
@@ -16,19 +15,16 @@
             <form method="POST" action="{{ route('warehouse-types.store') }}" class="space-y-6">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <x-label for="code">Kode Tipe Gudang</x-label>
-                        <x-input id="code" class="font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $nextCode)" required readonly placeholder="TPG-001" />
-                        <x-input-error :messages="$errors->get('code')" class="mt-2" />
-                        <p class="text-[11px] text-slate-400">Kode dibuat otomatis oleh sistem.</p>
-                    </div>
+                <div class="space-y-2">
+                    <x-label for="code" required>Kode Tipe Gudang</x-label>
+                    <x-input id="code" class="font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $nextCode)" required readonly placeholder="TPG-001" />
+                    <x-input-error :messages="$errors->get('code')" class="mt-2" />
+                </div>
 
-                    <div class="space-y-2">
-                        <x-label for="name">Nama Tipe Gudang</x-label>
-                        <x-input id="name" type="text" name="name" :value="old('name')" required placeholder="Contoh: Cold Storage / Dry Storage" />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+                <div class="space-y-2">
+                    <x-label for="name" required>Nama Tipe Gudang</x-label>
+                    <x-input id="name" type="text" name="name" :value="old('name')" required placeholder="Contoh: Cold Storage / Dry Storage" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
                 <div class="space-y-2">

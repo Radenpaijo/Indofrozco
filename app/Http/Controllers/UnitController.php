@@ -44,6 +44,8 @@ class UnitController extends Controller
 
     public function update(Request $permintaan, Unit $unit)
     {
+        $permintaan->merge(['code' => $unit->code]);
+
         $permintaan->validate([
             'code' => 'required|string|max:50|unique:units,code,' . $unit->id,
             'name' => 'required|string|max:255',

@@ -6,7 +6,6 @@
                 <h2 class="font-bold text-2xl text-slate-800 leading-tight">
                     {{ __('Edit Satuan Barang') }}
                 </h2>
-                <p class="text-xs text-slate-500 mt-1">Perbarui data unit satuan {{ $unit->name }}.</p>
             </div>
         </div>
     </x-slot>
@@ -17,18 +16,16 @@
                 @csrf
                 @method('PUT')
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <x-input-label for="code" :value="__('Kode Satuan')" />
-                        <x-text-input id="code" class="block mt-1 w-full font-mono bg-slate-50 uppercase" type="text" name="code" :value="old('code', $unit->code)" required autofocus />
-                        <x-input-error :messages="$errors->get('code')" class="mt-2" />
-                    </div>
+                <div>
+                    <x-input-label for="code" :value="__('Kode Satuan')" :required="true" />
+                    <x-text-input id="code" class="block mt-1 w-full font-mono bg-slate-100 cursor-not-allowed text-slate-600 uppercase" type="text" name="code" :value="old('code', $unit->code)" required readonly />
+                    <x-input-error :messages="$errors->get('code')" class="mt-2" />
+                </div>
 
-                    <div>
-                        <x-input-label for="name" :value="__('Nama Satuan')" />
-                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name', $unit->name)" required />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+                <div>
+                    <x-input-label for="name" :value="__('Nama Satuan')" :required="true" />
+                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name', $unit->name)" required autofocus />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
                 <div>

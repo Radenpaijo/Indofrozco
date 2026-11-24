@@ -43,7 +43,6 @@ class WarehouseTypeController extends Controller
         $permintaan->validate([
             'code' => 'required|string|max:50|unique:warehouse_types,code',
             'name' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive',
             'description' => 'nullable|string',
         ]);
 
@@ -59,6 +58,8 @@ class WarehouseTypeController extends Controller
 
     public function update(Request $permintaan, WarehouseType $warehouseType)
     {
+        $permintaan->merge(['code' => $warehouseType->code]);
+
         $permintaan->validate([
             'code' => 'required|string|max:50|unique:warehouse_types,code,' . $warehouseType->id,
             'name' => 'required|string|max:255',

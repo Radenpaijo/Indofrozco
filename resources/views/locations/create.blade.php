@@ -1,16 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
-            <div class="flex items-center gap-4 min-w-0">
-                <x-back-button />
-                <div class="min-w-0">
-                    <h2 class="font-bold text-2xl text-slate-800 leading-tight">
-                        {{ __('Tambah Lokasi / Rak Gudang') }}
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-1">
-                        Input data rak gudang baru dan kapasitas maksimalnya.
-                    </p>
-                </div>
+        <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+            <x-back-button :href="route('locations.index')" />
+            <div class="min-w-0">
+                <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+                    {{ __('Tambah Lokasi / Rak Gudang') }}
+                </h2>
             </div>
         </div>
     </x-slot>
@@ -41,37 +36,51 @@
                     <x-input-error :messages="$errors->get('warehouse_id')" class="mt-2" />
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <x-label for="code">Kode Rak</x-label>
-                        <x-input id="code" class="font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $nextCode)" required readonly placeholder="RAK-001" />
-                        <x-input-error :messages="$errors->get('code')" class="mt-2" />
-                        <p class="text-[11px] text-slate-400">Kode dibuat otomatis oleh sistem.</p>
-                    </div>
-
-                    <div class="space-y-2">
-                        <x-label for="name">Nama Rak / Baris</x-label>
-                        <x-input id="name" type="text" name="name" :value="old('name')" required placeholder="Contoh: Rak Cold Storage A-01" />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
+                <div class="space-y-2">
+                    <x-label for="code" required>Kode Rak</x-label>
+                    <x-input id="code" class="font-mono bg-slate-100 cursor-not-allowed text-slate-600" type="text" name="code" :value="old('code', $nextCode)" required readonly placeholder="RAK-001" />
+                    <x-input-error :messages="$errors->get('code')" class="mt-2" />
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <x-label for="capacity">Kapasitas Maksimal</x-label>
-                        <x-input id="capacity" type="number" step="0.01" name="capacity" :value="old('capacity')" placeholder="Contoh: 5000" />
-                        <x-input-error :messages="$errors->get('capacity')" class="mt-2" />
-                        <p class="text-[11px] text-slate-400">Kosongkan jika tidak ada batasan kapasitas.</p>
-                    </div>
+                <div class="space-y-2">
+                    <x-label for="name" required>Nama Rak / Baris</x-label>
+                    <x-input id="name" type="text" name="name" :value="old('name')" required placeholder="Contoh: Rak Cold Storage A-01" />
+                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                </div>
 
-                    <div class="space-y-2">
-                        <x-label for="status">Status</x-label>
-                        <x-select id="status" name="status">
-                            <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif</option>
-                            <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-                        </x-select>
-                        <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <x-label for="capacity">Kapasitas Maksimal & Satuan</x-label>
+                        <a href="{{ route('units.create') }}" target="_blank" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline">
+                            + Tambah Satuan
+                        </a>
                     </div>
+                    <div class="flex gap-2">
+                        <div class="flex-1">
+                            <x-input id="capacity" type="number" step="0.01" name="capacity" :value="old('capacity')" placeholder="Contoh: 5000" />
+                        </div>
+                        <div class="w-40">
+                            <x-select id="satuan" name="satuan" required>
+                                <option value="">-- Pilih Satuan --</option>
+                                @foreach($units as $unit)
+                                    <option value="{{ $unit->name }}" {{ old('satuan') === $unit->name ? 'selected' : '' }}>
+                                        {{ $unit->name }}
+                                    </option>
+                                @endforeach
+                            </x-select>
+                        </div>
+                    </div>
+                    <x-input-error :messages="$errors->get('capacity')" class="mt-1" />
+                    <x-input-error :messages="$errors->get('satuan')" class="mt-1" />
+                </div>
+
+                <div class="space-y-2">
+                    <x-label for="status">Status</x-label>
+                    <x-select id="status" name="status">
+                        <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif</option>
+                        <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+                    </x-select>
+                    <x-input-error :messages="$errors->get('status')" class="mt-2" />
                 </div>
 
                 <div class="flex items-center justify-end space-x-3 pt-6 border-t border-slate-100">

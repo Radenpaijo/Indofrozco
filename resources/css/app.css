@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 @layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
     :root {
         --background: #ffffff;
         --foreground: #0f172a;
@@ -28,9 +32,17 @@
     }
 
     body {
-        font-family: 'Outfit', sans-serif;
+        font-family: 'Outfit', sans-serif !important;
         background-color: var(--background);
         color: var(--foreground);
+    }
+
+    *, ::before, ::after {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    input, button, select, textarea, kbd, code, pre, table, th, td {
+        font-family: 'Outfit', sans-serif !important;
     }
 }
 
@@ -99,6 +111,31 @@
     tbody tr:hover td {
         background-color: #f8fafc !important;
         /* slate-50 */
+    }
+
+    /* Responsive card-mode tables: hapus border & background kotak sel tabel bawaan saat tampil sebagai kartu di mobile */
+    @media (max-width: 1023.98px) {
+        table.responsive-card-lg tbody td,
+        table.responsive-card-lg tbody tr:hover td {
+            border: none !important;
+            background-color: transparent !important;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        table.responsive-card-md tbody td,
+        table.responsive-card-md tbody tr:hover td {
+            border: none !important;
+            background-color: transparent !important;
+        }
+    }
+
+    @media (max-width: 639.98px) {
+        table.responsive-card-sm tbody td,
+        table.responsive-card-sm tbody tr:hover td {
+            border: none !important;
+            background-color: transparent !important;
+        }
     }
 }
 
