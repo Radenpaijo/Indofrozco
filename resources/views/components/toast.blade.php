@@ -39,35 +39,27 @@
         opacity: 0 !important;
     }
 
-    /* Aksen border serasi status notifikasi */
+    /* Aksen border serasi status notifikasi (Clean & Minimalist Enterprise) */
+    .toast-card {
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03) !important;
+    }
     .toast-card.toast-success {
-        border-left: 4px solid #10b981 !important;
-        border-top: 1px solid #d1fae5 !important;
-        border-right: 1px solid #d1fae5 !important;
-        border-bottom: 1px solid #d1fae5 !important;
+        border-left: 3px solid #10b981 !important;
     }
     .toast-card.toast-error {
-        border-left: 4px solid #f43f5e !important;
-        border-top: 1px solid #ffe4e6 !important;
-        border-right: 1px solid #ffe4e6 !important;
-        border-bottom: 1px solid #ffe4e6 !important;
+        border-left: 3px solid #f43f5e !important;
     }
     .toast-card.toast-warning {
-        border-left: 4px solid #f59e0b !important;
-        border-top: 1px solid #fef3c7 !important;
-        border-right: 1px solid #fef3c7 !important;
-        border-bottom: 1px solid #fef3c7 !important;
+        border-left: 3px solid #f59e0b !important;
     }
     .toast-card.toast-info {
-        border-left: 4px solid #0ea5e9 !important;
-        border-top: 1px solid #e0f2fe !important;
-        border-right: 1px solid #e0f2fe !important;
-        border-bottom: 1px solid #e0f2fe !important;
+        border-left: 3px solid #64748b !important;
     }
 
     .toast-icon-wrap {
         flex-shrink: 0 !important;
-        padding: 0.45rem !important;
+        padding: 0.4rem !important;
         border-radius: 0.5rem !important;
         display: flex !important;
         align-items: center !important;
@@ -76,7 +68,7 @@
     .toast-icon-success { background-color: #ecfdf5 !important; color: #059669 !important; }
     .toast-icon-error { background-color: #fff1f2 !important; color: #e11d48 !important; }
     .toast-icon-warning { background-color: #fffbeb !important; color: #d97706 !important; }
-    .toast-icon-info { background-color: #f0f9ff !important; color: #0284c7 !important; }
+    .toast-icon-info { background-color: #f1f5f9 !important; color: #475569 !important; }
 
     .toast-content {
         flex: 1 1 0% !important;
@@ -85,23 +77,22 @@
     }
 
     .toast-title {
-        font-size: 0.75rem !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.05em !important;
-        line-height: 1.2 !important;
+        font-size: 0.8125rem !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        line-height: 1.25 !important;
         margin: 0 !important;
     }
-    .toast-title-success { color: #065f46 !important; }
-    .toast-title-error { color: #9f1239 !important; }
-    .toast-title-warning { color: #92400e !important; }
-    .toast-title-info { color: #075985 !important; }
+    .toast-title-success { color: #0f172a !important; }
+    .toast-title-error { color: #0f172a !important; }
+    .toast-title-warning { color: #0f172a !important; }
+    .toast-title-info { color: #0f172a !important; }
 
     .toast-msg {
-        font-size: 0.8125rem !important;
-        font-weight: 500 !important;
-        color: #334155 !important;
-        margin-top: 0.35rem !important;
+        font-size: 0.75rem !important;
+        font-weight: 400 !important;
+        color: #475569 !important;
+        margin-top: 0.25rem !important;
         line-height: 1.4 !important;
         word-break: break-word !important;
     }
@@ -127,8 +118,8 @@
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
-        height: 3px !important;
-        background-color: #f1f5f9 !important;
+        height: 2px !important;
+        background-color: #f8fafc !important;
         overflow: hidden !important;
     }
 
@@ -139,7 +130,7 @@
     .toast-progress-success { background-color: #10b981 !important; }
     .toast-progress-error { background-color: #f43f5e !important; }
     .toast-progress-warning { background-color: #f59e0b !important; }
-    .toast-progress-info { background-color: #0ea5e9 !important; }
+    .toast-progress-info { background-color: #64748b !important; }
 </style>
 
 <div id="toast-container" aria-live="polite" aria-atomic="true"></div>

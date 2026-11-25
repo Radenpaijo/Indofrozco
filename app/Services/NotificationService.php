@@ -51,8 +51,8 @@ class NotificationService
                     'url' => route('barangs.show', $item->id),
                     'badge' => $isZero ? 'Habis (0)' : 'Perlu Restock',
                     'badge_class' => $isZero 
-                        ? 'bg-rose-50 text-rose-700 border border-rose-200/80' 
-                        : 'bg-amber-50 text-amber-700 border border-amber-200/80',
+                        ? 'bg-rose-50 text-rose-700 border border-rose-200' 
+                        : 'bg-amber-50 text-amber-800 border border-amber-200',
                     'icon' => 'warning',
                     'time' => 'Kritis',
                 ];
@@ -89,7 +89,7 @@ class NotificationService
                         : "Batch {$batch->batch_number} kedaluwarsa dlm {$diffDays} hari ({$expDate->format('d M Y')})",
                     'url' => route('barangs.show', $batch->barang_id),
                     'badge' => $isExpired ? 'Kedaluwarsa' : 'Near Exp',
-                    'badge_class' => 'bg-rose-50 text-rose-700 border border-rose-200/80',
+                    'badge_class' => 'bg-rose-50 text-rose-700 border border-rose-200',
                     'icon' => 'clock',
                     'time' => $expDate->format('d/m/Y'),
                 ];
@@ -117,7 +117,7 @@ class NotificationService
                     'message' => "Diajukan oleh {$pemohon} • Menunggu pengeluaran gudang",
                     'url' => route('permintaan-barang.show', $pb->id),
                     'badge' => 'Menunggu Gudang',
-                    'badge_class' => 'bg-sky-50 text-sky-700 border border-sky-200/80',
+                    'badge_class' => 'bg-slate-100 text-slate-700 border border-slate-200',
                     'icon' => 'clipboard',
                     'time' => $timeAgo,
                 ];
@@ -145,7 +145,7 @@ class NotificationService
                     'message' => "Diajukan oleh {$pemohon} • Menunggu verifikasi Purchasing",
                     'url' => route('permintaan-pembelian.show', $pr->id),
                     'badge' => 'Menunggu PO',
-                    'badge_class' => 'bg-indigo-50 text-indigo-700 border border-indigo-200/80',
+                    'badge_class' => 'bg-slate-100 text-slate-700 border border-slate-200',
                     'icon' => 'shopping-cart',
                     'time' => $timeAgo,
                 ];
@@ -173,7 +173,7 @@ class NotificationService
                     'message' => "Pengiriman oleh {$supplier} • Siap penerimaan gudang",
                     'url' => route('purchase-orders.show', $po->id),
                     'badge' => strtoupper($po->status),
-                    'badge_class' => 'bg-emerald-50 text-emerald-700 border border-emerald-200/80',
+                    'badge_class' => 'bg-slate-100 text-slate-700 border border-slate-200',
                     'icon' => 'truck',
                     'time' => $timeAgo,
                 ];

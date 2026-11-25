@@ -111,11 +111,11 @@
                             <a href="{{ $notif['url'] }}" @click="notifOpen = false" class="p-3.5 hover:bg-slate-50 transition block group">
                                 <div class="flex items-start gap-2.5">
                                     <!-- Indicator dot -->
-                                    <span class="mt-1.5 w-2 h-2 rounded-full shrink-0 {{ $notif['type'] === 'warning' ? 'bg-amber-500' : ($notif['type'] === 'danger' ? 'bg-rose-500' : 'bg-blue-500') }}"></span>
+                                    <span class="mt-1.5 w-2 h-2 rounded-full shrink-0 {{ $notif['type'] === 'danger' ? 'bg-rose-500' : ($notif['type'] === 'warning' ? 'bg-amber-500' : 'bg-slate-400') }}"></span>
 
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-baseline justify-between gap-2">
-                                            <span class="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition truncate">
+                                            <span class="text-xs font-semibold text-slate-900 group-hover:text-indigo-600 transition truncate">
                                                 {{ $notif['title'] }}
                                             </span>
                                             <span class="text-[11px] text-slate-400 shrink-0">{{ $notif['time'] }}</span>
@@ -123,10 +123,15 @@
                                         <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">
                                             {{ $notif['message'] }}
                                         </p>
-                                        <div class="mt-1.5 flex items-center gap-2">
+                                        <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
                                             <span class="inline-block text-[10px] font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600">
                                                 {{ $notif['category'] }}
                                             </span>
+                                            @if(!empty($notif['badge']))
+                                                <span class="inline-block text-[10px] font-semibold px-2 py-0.5 rounded {{ $notif['badge_class'] ?? 'bg-slate-100 text-slate-600 border border-slate-200' }}">
+                                                    {{ $notif['badge'] }}
+                                                </span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -140,7 +145,7 @@
 
                     <!-- Footer -->
                     <div class="p-2.5 bg-slate-50 border-t border-slate-200 text-center">
-                        <a href="{{ route('dashboard') }}" @click="notifOpen = false" class="text-xs font-semibold text-blue-600 hover:text-blue-800">
+                        <a href="{{ route('dashboard') }}" @click="notifOpen = false" class="text-xs font-semibold text-slate-700 hover:text-slate-900 transition">
                             Lihat Semua di Dashboard &rarr;
                         </a>
                     </div>
