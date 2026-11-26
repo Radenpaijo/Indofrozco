@@ -82,24 +82,7 @@ class DashboardController extends Controller
         // ---------------------------------------------------------------------
         // 4. KAPASITAS RAK & GUDANG (Persentase Utilisasi Ruang)
         // ---------------------------------------------------------------------
-        $locationsSummary = Location::with(['warehouse', 'barangs'])
-            ->where('status', 'active')
-            ->orderBy('code')
-            ->get()
-            ->map(function ($loc) {
-                $maxCap  = (float) ($loc->capacity ?? 0);
-                $usedCap = (float) $loc->hitungKapasitasTerpakai();
-                $percent = $maxCap > 0 ? min(100, round(($usedCap / $maxCap) * 100)) : null;
-
-                $loc->computed_used    = $usedCap;
-                $loc->computed_max     = $maxCap;
-                $loc->computed_percent = $percent;
-                return $loc;
-            })
-            ->sortByDesc(function ($loc) {
-                return $loc->computed_percent ?? -1;
-            })
-            ->values();
+        $locationsSummary = $this->getRackCapacities();
 
         // ---------------------------------------------------------------------
         // 5. TREN PERGERAKAN BARANG 6 BULAN TERAKHIR (Data untuk Chart.js)
@@ -199,6 +182,34 @@ class DashboardController extends Controller
             'financeMonth',
             'financeCurrentStockValue'
         ));
+    }
+
+    /**
+     * Ambil dan hitung utilisasi kapasitas semua lokasi/rak aktif.
+     * Type-hint eksplisit pada closure agar static analysis mengenali Location::hitungKapasitasTerpakai().
+     *
+     * @return \Illuminate\Support\Collection<int, Location>
+     */
+    private function getRackCapacities(): \Illuminate\Support\Collection
+    {
+        return Location::with(['warehouse', 'barangs'])
+            ->where('status', 'active')
+            ->orderBy('code')
+            ->get()
+            ->map(function (Location $loc): Location {
+                $maxCap  = (float) ($loc->capacity ?? 0);
+                $usedCap = (float) $loc->hitungKapasitasTerpakai();
+                $percent = $maxCap > 0 ? min(100, round(($usedCap / $maxCap) * 100)) : null;
+
+                $loc->computed_used    = $usedCap;
+                $loc->computed_max     = $maxCap;
+                $loc->computed_percent = $percent;
+                return $loc;
+            })
+            ->sortByDesc(function (Location $loc): float {
+                return $loc->computed_percent ?? -1.0;
+            })
+            ->values();
     }
 
     /**
